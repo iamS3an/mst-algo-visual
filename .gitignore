@@ -7,7 +7,6 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-dist/
 .vite/
 .vitepress/cache/
 .DS_Store
