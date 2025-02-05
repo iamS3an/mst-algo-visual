@@ -1,8 +1,31 @@
-# React + Vite
+# Algorithm Visualization
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Overview
+A **web-based tool** for visualizing algorithm execution **step by step**. It helps learners understand algorithms through **interactive animations and user inputs**.
 
-Currently, two official plugins are available:
+## 🎯 Motivation
+- **Easier Learning**: Visualizing execution makes understanding algorithms simpler.  
+- **Better Than Static Methods**: Most resources use **pseudocode** or **non-interactive diagrams**.  
+- **Beginner-Friendly**: Interactive steps make it easier to follow complex operations.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🏛️ Background
+- **Traditional teaching is theoretical** and lacks visualization.  
+- **Debugging algorithms is challenging** without interactive tools.  
+- **Existing tools are limited** in interactivity and ease of use.  
+
+## 🔥 Features
+✅ **Web-Based** – No installation needed.  
+✅ **Step-by-Step Execution** – Visualizes **graphs & animations**.  
+✅ **User Interaction** – Modify inputs & adjust parameters.  
+
+## 🚀 Next Steps
+1. Focus on **Minimum Spanning Tree (MST) algorithms**.  
+2. Research existing applications to improve uniqueness.  
+3. Choose the best tools & frameworks for implementation.  
+
+## ⚡ Challenges
+- **Making the interface intuitive** compared to existing solutions.  
+- **Proving its effectiveness** in improving algorithm learning.  
+
+## 📚 Reference  
+[Algorithm Learning Resource](https://bost.ocks.org/mike/algorithms/)
