@@ -43,7 +43,7 @@ export function connectNodes(clickedNode, scene, edges, selectedNodesForEdge, di
     return selectedNodesForEdge;
 }
 
-export function initExample(scene, nodes, edges, numNodes, randomEdges, radius, nodeRadius) {
+export function createExample(scene, nodes, edges, numNodes, randomEdges, radius, nodeRadius) {
     const randomRadius = radius + (Math.random() * 10 - 5);
     for (let i = 0; i < numNodes; i++) {
         const node = createNode(nodeRadius);

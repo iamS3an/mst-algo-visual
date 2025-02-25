@@ -35,7 +35,7 @@ export function createEdge(nodeA, nodeB) {
     sprite.scale.set(5, 5, 1);
     edge.sprite = sprite;
     edge.userData = { nodeA, nodeB };
-    
+
     return edge;
 }
 
