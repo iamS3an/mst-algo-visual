@@ -1,22 +1,13 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
+import { initScene } from './initScene';
+import { updatePointer, initExample, connectNodes } from './utils';
 import { updateEdge } from './edges';
 import { createNode } from './nodes';
-import { updatePointer, initExample, connectNodes } from './utils';
 
 export function createScene(container) {
     if (container) container.innerHTML = '';
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#242424');
-
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 125;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.gammaOutput = true;
-    renderer.shadowMap.enabled = true;
-    container.appendChild(renderer.domElement);
+    const { scene, camera, renderer } = initScene(container);
 
     const nodes = [];
     const edges = [];
