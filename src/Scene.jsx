@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Canvas } from './canvas';
+import { createScene } from './utils/createScene';
 
-const Scene = () => {
+function Scene() {
     const containerRef = useRef(null);
     const managerRef = useRef(null);
     const [edgeMode, setEdgeMode] = useState(false);
 
     useEffect(() => {
-        managerRef.current = Canvas(containerRef.current);
+        managerRef.current = createScene(containerRef.current);
         const handleEdgeComplete = () => setEdgeMode(false);
         window.addEventListener('edgeComplete', handleEdgeComplete);
         return () => {
@@ -20,8 +20,8 @@ const Scene = () => {
         managerRef.current?.reload();
     };
 
-    const handleClearCanvas = () => {
-        managerRef.current?.clearCanvas();
+    const handleClearScene = () => {
+        managerRef.current?.clearScene();
     };
 
     const handleAddNode = () => {
@@ -29,11 +29,7 @@ const Scene = () => {
     };
 
     const handleAddEdge = () => {
-        if (edgeMode) {
-            setEdgeMode(false);
-        } else {
-            setEdgeMode(true);
-        }
+        setEdgeMode(prev => !prev);
         managerRef.current?.addEdge();
     };
 
@@ -79,7 +75,7 @@ const Scene = () => {
                 Example
             </button>
             <button
-                onClick={handleClearCanvas}
+                onClick={handleClearScene}
                 style={{
                     position: 'absolute',
                     bottom: '20px',
