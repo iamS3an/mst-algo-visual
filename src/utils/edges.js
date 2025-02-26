@@ -25,8 +25,9 @@ export function createEdge(nodeA, nodeB) {
     });
     const edge = new THREE.Mesh(geometry, material);
 
+    const weightTexture = createWeightTexture(weight);
     const spriteMaterial = new THREE.SpriteMaterial({
-        map: createWeightTexture(weight),
+        map: weightTexture,
         transparent: true,
     });
     const sprite = new THREE.Sprite(spriteMaterial);
@@ -37,18 +38,4 @@ export function createEdge(nodeA, nodeB) {
     edge.userData = { nodeA, nodeB };
 
     return edge;
-}
-
-export function updateEdge(edge) {
-    const { nodeA, nodeB } = edge.userData;
-    const newPath = new THREE.CatmullRomCurve3([nodeA.position, nodeB.position]);
-    edge.geometry.dispose();
-    edge.geometry = new THREE.TubeGeometry(newPath, 20, 0.3, 8, false);
-
-    const midPoint = newPath.getPointAt(0.5);
-    edge.sprite.position.copy(midPoint);
-    const newWeight = Math.round(nodeA.position.distanceTo(nodeB.position) / 5);
-    const newTexture = createWeightTexture(newWeight);
-    edge.sprite.material.map = newTexture;
-    edge.sprite.material.needsUpdate = true;
 }

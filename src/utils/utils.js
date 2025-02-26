@@ -13,6 +13,16 @@ export function isConnected(nodeA, nodeB, edges) {
     });
 }
 
+export function updateEdge(edge) {
+    const { nodeA, nodeB } = edge.userData;
+    const newEdge = createEdge(nodeA, nodeB);
+    edge.geometry.dispose();
+    edge.geometry = newEdge.geometry;
+    edge.sprite.position.copy(newEdge.sprite.position);
+    edge.sprite.material.map = newEdge.sprite.material.map;
+    edge.sprite.material.needsUpdate = true;
+}
+
 export function connectNodes(clickedNode, scene, edges, selectedNodesForEdge, disableEdgeMode) {
     if (!clickedNode.userData.originalColor) {
         clickedNode.userData.originalColor = clickedNode.material.color.clone();

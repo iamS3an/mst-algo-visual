@@ -1,4 +1,10 @@
 import * as THREE from 'three';
+import { updatePointer, connectNodes, updateEdge } from './utils';
+
+const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
+    updatePointer(event, pointer);
+    raycaster.setFromCamera(pointer, camera);
+};
 
 export function onWindowResize({ camera, renderer }) {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -7,9 +13,8 @@ export function onWindowResize({ camera, renderer }) {
 }
 
 export function onPointerDown(event, params) {
-    const { pointer, raycaster, camera, nodes, controls, plane, offset, state, scene, edges, connectNodes, updatePointer } = params;
-    updatePointer(event, pointer);
-    raycaster.setFromCamera(pointer, camera);
+    const { pointer, raycaster, camera, nodes, controls, plane, offset, state, scene, edges } = params;
+    updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
         if (state.edgeMode) {
@@ -26,10 +31,9 @@ export function onPointerDown(event, params) {
 }
 
 export function onPointerMove(event, params) {
-    const { pointer, raycaster, camera, plane, offset, state, edges, updateEdge, updatePointer } = params;
+    const { pointer, raycaster, camera, plane, offset, state, edges } = params;
     if (!state.selectedNode) return;
-    updatePointer(event, pointer);
-    raycaster.setFromCamera(pointer, camera);
+    updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersection = new THREE.Vector3();
     if (raycaster.ray.intersectPlane(plane, intersection)) {
         state.selectedNode.position.copy(intersection.sub(offset));

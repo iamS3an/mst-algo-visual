@@ -1,7 +1,6 @@
 import { initScene } from './initScene';
 import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from './eventHandlers';
-import { updatePointer, createExample, connectNodes } from './utils';
-import { updateEdge } from './edges';
+import { createExample } from './utils';
 import { createNode } from './nodes';
 
 export function createScene(container) {
@@ -12,15 +11,15 @@ export function createScene(container) {
     const edges = [];
 
     const exampleNodes = 10;
-    const ramdomEdges = 5;
+    const randomEdges = 5;
     const radius = 60;
     const nodeRadius = 5;
 
-    createExample(scene, nodes, edges, exampleNodes, ramdomEdges, radius, nodeRadius);
+    createExample(scene, nodes, edges, exampleNodes, randomEdges, radius, nodeRadius);
 
     const handleResize = () => onWindowResize({ camera, renderer });
-    const handlePointerDown = (event) => onPointerDown(event, { pointer, raycaster, camera, nodes, controls, plane, offset, state, scene, edges, connectNodes, updatePointer });
-    const handlePointerMove = (event) => onPointerMove(event, { pointer, raycaster, camera, nodes, controls, plane, offset, state, edges, updateEdge, updatePointer });
+    const handlePointerDown = (event) => onPointerDown(event, { pointer, raycaster, camera, nodes, controls, plane, offset, state, scene, edges });
+    const handlePointerMove = (event) => onPointerMove(event, { pointer, raycaster, camera, plane, offset, state, edges });
     const handlePointerUp = () => onPointerUp({ controls, state });
 
     const eventListeners = [
