@@ -68,6 +68,9 @@ export function createScene(container) {
             });
             state.selectedNodesForEdge = [];
         },
+        selectBegin: () => {
+            state.selectStart = !state.selectStart;
+        },
         cleanup: () => {
             unbindEventListeners();
         },

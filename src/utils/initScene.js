@@ -27,6 +27,7 @@ export function initScene(container) {
     const state = {
         selectedNode: null,
         edgeMode: false,
+        beginMode: false,
         selectedNodesForEdge: [],
     };
 
