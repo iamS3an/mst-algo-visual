@@ -68,7 +68,7 @@ export function createScene(container) {
             });
             state.selectedNodesForEdge = [];
         },
-        selectBegin: () => {
+        selectStart: () => {
             state.selectStart = !state.selectStart;
         },
         cleanup: () => {

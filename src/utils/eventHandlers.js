@@ -18,9 +18,7 @@ export function onPointerDown(event, params) {
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
         if (state.edgeMode) {
-            state.selectedNodesForEdge = connectNodes(intersects[0].object, scene, edges, state.selectedNodesForEdge, () => {
-                state.edgeMode = false;
-            });
+            state.selectedNodesForEdge = connectNodes(intersects[0].object, scene, edges, state.selectedNodesForEdge);
             return;
         }
         state.selectedNode = intersects[0].object;

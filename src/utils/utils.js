@@ -23,7 +23,7 @@ export function updateEdge(edge) {
     edge.sprite.material.needsUpdate = true;
 }
 
-export function connectNodes(clickedNode, scene, edges, selectedNodesForEdge, disableEdgeMode) {
+export function connectNodes(clickedNode, scene, edges, selectedNodesForEdge) {
     if (!clickedNode.userData.originalColor) {
         clickedNode.userData.originalColor = clickedNode.material.color.clone();
     }
@@ -46,8 +46,6 @@ export function connectNodes(clickedNode, scene, edges, selectedNodesForEdge, di
         selectedNodesForEdge.forEach((node) => {
             node.material.color.copy(node.userData.originalColor);
         });
-        window.dispatchEvent(new Event('edgeComplete'));
-        disableEdgeMode();
         return [];
     }
     return selectedNodesForEdge;
