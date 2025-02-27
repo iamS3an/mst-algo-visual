@@ -4,8 +4,7 @@ import { createScene } from './utils/createScene';
 function Scene() {
     const containerRef = useRef(null);
     const managerRef = useRef(null);
-    const [connectMode, setConnectMode] = useState(false);
-    const [selectStartMode, setSelectStartMode] = useState(false);
+    const [activeMode, setActiveMode] = useState(null);
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
@@ -27,19 +26,25 @@ function Scene() {
     };
 
     const handleAddEdge = () => {
-        setConnectMode(prev => !prev);
-        managerRef.current?.addEdge();
+        const newMode = activeMode === 'connectNodes' ? null : 'connectNodes';
+        setActiveMode(newMode);
+        if (newMode === 'connectNodes') {
+            managerRef.current?.addEdge();
+        }
     };
 
     const handleSelectStart = () => {
-        setSelectStartMode(prev => !prev);
-        managerRef.current?.selectStart();
-    }
+        const newMode = activeMode === 'selectStart' ? null : 'selectStart';
+        setActiveMode(newMode);
+        if (newMode === 'selectStart') {
+            managerRef.current?.selectStart();
+        }
+    };
 
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
             <div ref={containerRef}></div>
-            {connectMode && (
+            {activeMode === 'connectNodes' && (
                 <div
                     style={{
                         position: 'absolute',
@@ -57,7 +62,7 @@ function Scene() {
                     Select two nodes to connect
                 </div>
             )}
-            {selectStartMode && (
+            {activeMode === 'selectStart' && (
                 <div
                     style={{
                         position: 'absolute',
@@ -177,6 +182,6 @@ function Scene() {
             </button>
         </div>
     );
-};
+}
 
 export default Scene;
