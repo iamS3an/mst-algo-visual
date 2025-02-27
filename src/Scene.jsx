@@ -4,19 +4,13 @@ import { createScene } from './utils/createScene';
 function Scene() {
     const containerRef = useRef(null);
     const managerRef = useRef(null);
-    const [edgeMode, setEdgeMode] = useState(false);
-    const [beginMode, setBeginMode] = useState(false);
+    const [connectMode, setConnectMode] = useState(false);
+    const [selectStartMode, setSelectStartMode] = useState(false);
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
-        const listeners = [
-            { event: 'edgeComplete', handler: () => setEdgeMode(false) },
-            { event: 'beginComplete', handler: () => setBeginMode(false) },
-        ];
-        listeners.forEach(l => window.addEventListener(l.event, l.handler));
         return () => {
             managerRef.current.cleanup();
-            listeners.forEach(l => window.removeEventListener(l.event, l.handler));
         };
     }, []);
 
@@ -33,19 +27,19 @@ function Scene() {
     };
 
     const handleAddEdge = () => {
-        setEdgeMode(prev => !prev);
+        setConnectMode(prev => !prev);
         managerRef.current?.addEdge();
     };
 
-    const handleSelectBegin = () => {
-        setBeginMode(prev => !prev);
-        managerRef.current?.selectBegin();
+    const handleSelectStart = () => {
+        setSelectStartMode(prev => !prev);
+        managerRef.current?.selectStart();
     }
 
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
             <div ref={containerRef}></div>
-            {edgeMode && (
+            {connectMode && (
                 <div
                     style={{
                         position: 'absolute',
@@ -63,7 +57,7 @@ function Scene() {
                     Select two nodes to connect
                 </div>
             )}
-            {beginMode && (
+            {selectStartMode && (
                 <div
                     style={{
                         position: 'absolute',
@@ -162,7 +156,7 @@ function Scene() {
                 Add Edge
             </button>
             <button
-                onClick={handleSelectBegin}
+                onClick={handleSelectStart}
                 style={{
                     position: 'absolute',
                     top: '80px',
@@ -179,7 +173,7 @@ function Scene() {
                 onMouseEnter={(e) => (e.target.style.backgroundColor = '#CC0000')}
                 onMouseLeave={(e) => (e.target.style.backgroundColor = '#FF0000')}
             >
-                Select Begin
+                Select Start Point
             </button>
         </div>
     );

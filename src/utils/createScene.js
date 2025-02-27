@@ -62,14 +62,28 @@ export function createScene(container) {
             nodes.push(node);
         },
         addEdge: () => {
-            state.edgeMode = !state.edgeMode;
-            state.selectedNodesForEdge.forEach((node) => {
+            state.modes.connectNodes = !state.modes.connectNodes;
+            Object.keys(state.modes).forEach((key) => {
+                if (key !== 'connectNodes') {
+                    state.modes[key] = false;
+                }
+            });
+            state.nodesForEdge.forEach((node) => {
                 node.material.color.copy(node.userData.originalColor);
             });
-            state.selectedNodesForEdge = [];
+            state.nodesForEdge = [];
         },
         selectStart: () => {
-            state.selectStart = !state.selectStart;
+            state.modes.selectStart = !state.modes.selectStart;
+            Object.keys(state.modes).forEach((key) => {
+                if (key !== 'selectStart') {
+                    state.modes[key] = false;
+                }
+            });
+            state.nodesForEdge.forEach((node) => {
+                node.material.color.copy(node.userData.originalColor);
+            });
+            state.nodesForEdge = [];
         },
         cleanup: () => {
             unbindEventListeners();

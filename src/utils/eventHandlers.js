@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { updatePointer, connectNodes, updateEdge } from './utils';
+import { updatePointer, connectNodes, updateEdge, selectStart } from './utils';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
     updatePointer(event, pointer);
@@ -17,8 +17,11 @@ export function onPointerDown(event, params) {
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
-        if (state.edgeMode) {
-            state.selectedNodesForEdge = connectNodes(intersects[0].object, scene, edges, state.selectedNodesForEdge);
+        if (state.modes.connectNodes) {
+            state.nodesForEdge = connectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
+            return;
+        } else if (state.modes.selectStart) {
+            nodes = selectStart(intersects[0].object, nodes);
             return;
         }
         state.selectedNode = intersects[0].object;
@@ -35,12 +38,12 @@ export function onPointerMove(event, params) {
     const intersection = new THREE.Vector3();
     if (raycaster.ray.intersectPlane(plane, intersection)) {
         state.selectedNode.position.copy(intersection.sub(offset));
-        edges.forEach((edge) => {
-            const { nodeA, nodeB } = edge.userData;
+        for (let i = 0; i < edges.length; i++) {
+            const { nodeA, nodeB } = edges[i].userData;
             if (nodeA === state.selectedNode || nodeB === state.selectedNode) {
-                updateEdge(edge);
+                edges[i] = updateEdge(edges[i]);
             }
-        });
+        }
     }
 }
 

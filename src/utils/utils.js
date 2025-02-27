@@ -20,35 +20,49 @@ export function updateEdge(edge) {
     edge.geometry = newEdge.geometry;
     edge.sprite.position.copy(newEdge.sprite.position);
     edge.sprite.material.map = newEdge.sprite.material.map;
-    edge.sprite.material.needsUpdate = true;
+    return edge;
 }
 
-export function connectNodes(clickedNode, scene, edges, selectedNodesForEdge) {
+export function selectStart(clickedNode, nodes) {
+    for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].userData.start) {
+            nodes[i].userData.start = false;
+            nodes[i].material.color.set('#02C874');
+            break;
+        }
+    }
+    clickedNode.userData.start = true;
+    clickedNode.material.color.set('#FF0000');
+    return nodes;
+    
+}
+
+export function connectNodes(clickedNode, scene, edges, nodesForEdge) {
     if (!clickedNode.userData.originalColor) {
         clickedNode.userData.originalColor = clickedNode.material.color.clone();
     }
-    if (!selectedNodesForEdge.includes(clickedNode)) {
-        selectedNodesForEdge.push(clickedNode);
+    if (!nodesForEdge.includes(clickedNode)) {
+        nodesForEdge.push(clickedNode);
         clickedNode.material.color.set('#F3FF9A');
     } else {
-        selectedNodesForEdge = selectedNodesForEdge.filter((node) => node !== clickedNode);
+        nodesForEdge = nodesForEdge.filter((node) => node !== clickedNode);
         clickedNode.material.color.copy(clickedNode.userData.originalColor);
-        return selectedNodesForEdge;
+        return nodesForEdge;
     }
-    if (selectedNodesForEdge.length === 2) {
-        const [node1, node2] = selectedNodesForEdge;
+    if (nodesForEdge.length === 2) {
+        const [node1, node2] = nodesForEdge;
         if (!isConnected(node1, node2, edges)) {
             const edge = createEdge(node1, node2);
             scene.add(edge);
             scene.add(edge.sprite);
             edges.push(edge);
         }
-        selectedNodesForEdge.forEach((node) => {
+        nodesForEdge.forEach((node) => {
             node.material.color.copy(node.userData.originalColor);
         });
         return [];
     }
-    return selectedNodesForEdge;
+    return nodesForEdge;
 }
 
 export function createExample(scene, nodes, edges, numNodes, randomEdges, radius, nodeRadius) {
