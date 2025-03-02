@@ -26,25 +26,19 @@ function Scene() {
     };
 
     const handleAddEdge = () => {
-        const newMode = activeMode === 'connectNodes' ? null : 'connectNodes';
-        setActiveMode(newMode);
-        if (newMode === 'connectNodes') {
-            managerRef.current?.addEdge();
-        }
+        setActiveMode(prev => prev === "connect" ? null : "connect");
+        managerRef.current?.addEdge();
     };
 
     const handleSelectStart = () => {
-        const newMode = activeMode === 'selectStart' ? null : 'selectStart';
-        setActiveMode(newMode);
-        if (newMode === 'selectStart') {
-            managerRef.current?.selectStart();
-        }
+        setActiveMode(prev => prev === "select" ? null : "select");
+        managerRef.current?.selectStart();
     };
 
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
             <div ref={containerRef}></div>
-            {activeMode === 'connectNodes' && (
+            {activeMode === "connect" && (
                 <div
                     style={{
                         position: 'absolute',
@@ -62,7 +56,7 @@ function Scene() {
                     Select two nodes to connect
                 </div>
             )}
-            {activeMode === 'selectStart' && (
+            {activeMode === "select" && (
                 <div
                     style={{
                         position: 'absolute',
@@ -182,6 +176,6 @@ function Scene() {
             </button>
         </div>
     );
-}
+};
 
 export default Scene;
