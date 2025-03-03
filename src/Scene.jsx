@@ -26,24 +26,24 @@ function Scene() {
     };
 
     const handleAddEdge = () => {
-        setActiveMode(prev => prev === "connect" ? null : "connect");
+        setActiveMode(prev => prev === "addEdge" ? null : "addEdge");
         managerRef.current?.addEdge();
     };
 
     const handleRemoveEdge = () => {
-        setActiveMode(prev => prev === "disconnect" ? null : "disconnect");
+        setActiveMode(prev => prev === "removeEdge" ? null : "removeEdge");
         managerRef.current?.removeEdge();
     };
 
     const handleSelectStart = () => {
-        setActiveMode(prev => prev === "select" ? null : "select");
+        setActiveMode(prev => prev === "selectStart" ? null : "selectStart");
         managerRef.current?.selectStart();
     };
 
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
             <div ref={containerRef}></div>
-            {activeMode === "connect" && (
+            {activeMode === "addEdge" && (
                 <div
                     style={{
                         position: 'absolute',
@@ -61,7 +61,7 @@ function Scene() {
                     Select two nodes to connect
                 </div>
             )}
-            {activeMode === "disconnect" && (
+            {activeMode === "removeEdge" && (
                 <div
                     style={{
                         position: 'absolute',
@@ -79,7 +79,7 @@ function Scene() {
                     Select two nodes to disconnect
                 </div>
             )}
-            {activeMode === "select" && (
+            {activeMode === "selectStart" && (
                 <div
                     style={{
                         position: 'absolute',

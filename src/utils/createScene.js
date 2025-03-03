@@ -71,10 +71,10 @@ export function createScene(container) {
             nodes.push(node);
         },
         addEdge: () => {
-            toggleMode('connectNodes');
+            toggleMode('addEdge');
         },
         removeEdge: () => {
-            toggleMode('disconnectNodes');
+            toggleMode('removeEdge');
         },
         selectStart: () => {
             toggleMode('selectStart');

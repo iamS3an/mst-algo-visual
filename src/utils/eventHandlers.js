@@ -17,10 +17,10 @@ export function onPointerDown(event, params) {
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
-        if (state.modes.connectNodes) {
+        if (state.modes.addEdge) {
             state.nodesForEdge = connectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
             return;
-        } else if (state.modes.disconnectNodes) {
+        } else if (state.modes.removeEdge) {
             state.nodesForEdge = disconnectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
             return;
         } else if (state.modes.selectStart) {
