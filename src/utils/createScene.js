@@ -34,16 +34,25 @@ export function createScene(container) {
     };
     bindEventListeners();
 
-    const unbindEventListeners = () => {
-        eventListeners.forEach((evt) => window.removeEventListener(evt.type, evt.handler, evt.options));
-    };
-
     const animate = () => {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
     };
     animate();
+
+    const unbindEventListeners = () => {
+        eventListeners.forEach((evt) => window.removeEventListener(evt.type, evt.handler, evt.options));
+    };
+
+    const toggleMode = (modeName) => {
+        state.modes[modeName] = !state.modes[modeName];
+        Object.keys(state.modes).forEach(key => {
+            if (key !== modeName) state.modes[key] = false;
+        });
+        state.nodesForEdge.forEach(node => node.material.color.copy(node.userData.originalColor));
+        state.nodesForEdge = [];
+    };
 
     return {
         reload: () => window.location.reload(),
@@ -62,40 +71,13 @@ export function createScene(container) {
             nodes.push(node);
         },
         addEdge: () => {
-            state.modes.connectNodes = !state.modes.connectNodes;
-            Object.keys(state.modes).forEach((key) => {
-                if (key !== 'connectNodes') {
-                    state.modes[key] = false;
-                }
-            });
-            state.nodesForEdge.forEach((node) => {
-                node.material.color.copy(node.userData.originalColor);
-            });
-            state.nodesForEdge = [];
+            toggleMode('connectNodes');
         },
         removeEdge: () => {
-            state.modes.disconnectNodes = !state.modes.disconnectNodes;
-            Object.keys(state.modes).forEach((key) => {
-                if (key !== 'disconnectNodes') {
-                    state.modes[key] = false;
-                }
-            });
-            state.nodesForEdge.forEach((node) => {
-                node.material.color.copy(node.userData.originalColor);
-            });
-            state.nodesForEdge = [];
+            toggleMode('disconnectNodes');
         },
         selectStart: () => {
-            state.modes.selectStart = !state.modes.selectStart;
-            Object.keys(state.modes).forEach((key) => {
-                if (key !== 'selectStart') {
-                    state.modes[key] = false;
-                }
-            });
-            state.nodesForEdge.forEach((node) => {
-                node.material.color.copy(node.userData.originalColor);
-            });
-            state.nodesForEdge = [];
+            toggleMode('selectStart');
         },
         cleanup: () => {
             unbindEventListeners();
