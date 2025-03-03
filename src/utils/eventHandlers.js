@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { updatePointer, connectNodes, updateEdge, selectStart } from './utils';
+import { updatePointer, connectNodes, disconnectNodes, updateEdge, selectStart } from './utils';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
     updatePointer(event, pointer);
@@ -19,6 +19,9 @@ export function onPointerDown(event, params) {
     if (intersects.length > 0) {
         if (state.modes.connectNodes) {
             state.nodesForEdge = connectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
+            return;
+        } else if (state.modes.disconnectNodes) {
+            state.nodesForEdge = disconnectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
             return;
         } else if (state.modes.selectStart) {
             nodes = selectStart(intersects[0].object, nodes);

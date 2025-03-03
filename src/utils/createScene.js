@@ -73,6 +73,18 @@ export function createScene(container) {
             });
             state.nodesForEdge = [];
         },
+        removeEdge: () => {
+            state.modes.disconnectNodes = !state.modes.disconnectNodes;
+            Object.keys(state.modes).forEach((key) => {
+                if (key !== 'disconnectNodes') {
+                    state.modes[key] = false;
+                }
+            });
+            state.nodesForEdge.forEach((node) => {
+                node.material.color.copy(node.userData.originalColor);
+            });
+            state.nodesForEdge = [];
+        },
         selectStart: () => {
             state.modes.selectStart = !state.modes.selectStart;
             Object.keys(state.modes).forEach((key) => {

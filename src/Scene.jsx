@@ -30,6 +30,11 @@ function Scene() {
         managerRef.current?.addEdge();
     };
 
+    const handleRemoveEdge = () => {
+        setActiveMode(prev => prev === "disconnect" ? null : "disconnect");
+        managerRef.current?.removeEdge();
+    };
+
     const handleSelectStart = () => {
         setActiveMode(prev => prev === "select" ? null : "select");
         managerRef.current?.selectStart();
@@ -56,6 +61,24 @@ function Scene() {
                     Select two nodes to connect
                 </div>
             )}
+            {activeMode === "disconnect" && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        padding: '10px 20px',
+                        backgroundColor: '#F3FF9A',
+                        color: '#000000',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                        zIndex: '9999',
+                    }}
+                >
+                    Select two nodes to disconnect
+                </div>
+            )}
             {activeMode === "select" && (
                 <div
                     style={{
@@ -64,7 +87,7 @@ function Scene() {
                         left: '50%',
                         transform: 'translateX(-50%)',
                         padding: '10px 20px',
-                        backgroundColor: '#FF0000',
+                        backgroundColor: '#F3FF9A',
                         color: '#000000',
                         border: '1px solid #000',
                         borderRadius: '5px',
@@ -153,6 +176,26 @@ function Scene() {
                 onMouseLeave={(e) => (e.target.style.backgroundColor = '#7B7B7B')}
             >
                 Add Edge
+            </button>
+            <button
+                onClick={handleRemoveEdge}
+                style={{
+                    position: 'absolute',
+                    top: '20px',
+                    left: '280px',
+                    padding: '10px 20px',
+                    backgroundColor: '#7B7B7B',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                    transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = '#666666')}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = '#7B7B7B')}
+            >
+                Remove Edge
             </button>
             <button
                 onClick={handleSelectStart}

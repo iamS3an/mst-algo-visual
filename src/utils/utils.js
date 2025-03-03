@@ -7,10 +7,12 @@ export function updatePointer(event, pointer) {
 }
 
 export function isConnected(nodeA, nodeB, edges) {
-    return edges.some((edge) => {
+    const foundEdge = edges.find((edge) => {
         const positions = edge.geometry.parameters.path.points;
-        return (positions[0].equals(nodeA.position) && positions[1].equals(nodeB.position)) || (positions[0].equals(nodeB.position) && positions[1].equals(nodeA.position));
+        return (positions[0].equals(nodeA.position) && positions[1].equals(nodeB.position)) ||
+               (positions[0].equals(nodeB.position) && positions[1].equals(nodeA.position));
     });
+    return foundEdge || null;
 }
 
 export function updateEdge(edge) {
@@ -34,7 +36,6 @@ export function selectStart(clickedNode, nodes) {
     clickedNode.userData.start = true;
     clickedNode.material.color.set('#FF0000');
     return nodes;
-    
 }
 
 export function connectNodes(clickedNode, scene, edges, nodesForEdge) {
@@ -56,6 +57,34 @@ export function connectNodes(clickedNode, scene, edges, nodesForEdge) {
             scene.add(edge);
             scene.add(edge.sprite);
             edges.push(edge);
+        }
+        nodesForEdge.forEach((node) => {
+            node.material.color.copy(node.userData.originalColor);
+        });
+        return [];
+    }
+    return nodesForEdge;
+}
+
+export function disconnectNodes(clickedNode, scene, edges, nodesForEdge) {
+    if (!clickedNode.userData.originalColor) {
+        clickedNode.userData.originalColor = clickedNode.material.color.clone();
+    }
+    if (!nodesForEdge.includes(clickedNode)) {
+        nodesForEdge.push(clickedNode);
+        clickedNode.material.color.set('#F3FF9A');
+    } else {
+        nodesForEdge = nodesForEdge.filter((node) => node !== clickedNode);
+        clickedNode.material.color.copy(clickedNode.userData.originalColor);
+        return nodesForEdge;
+    }
+    if (nodesForEdge.length === 2) {
+        const [node1, node2] = nodesForEdge;
+        const foundEdge = isConnected(node1, node2, edges);
+        if (foundEdge) {
+            scene.remove(foundEdge);
+            scene.remove(foundEdge.sprite);
+            edges = edges.filter((edge) => edge !== foundEdge);
         }
         nodesForEdge.forEach((node) => {
             node.material.color.copy(node.userData.originalColor);

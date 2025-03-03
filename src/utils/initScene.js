@@ -28,6 +28,7 @@ export function initScene(container) {
         selectedNode: null,
         modes: {
             connectNodes: false,
+            disconnectNodes: false,
             selectStart: false,
         },
         nodesForEdge: [],
