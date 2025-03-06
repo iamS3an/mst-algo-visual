@@ -1,18 +1,37 @@
 import { createEdge } from './edges';
 import { createNode } from './nodes';
 
+const isConnected = (nodeA, nodeB, edges) => {
+    const foundEdge = edges.find((edge) => {
+        const positions = edge.geometry.parameters.path.points;
+        return (positions[0].equals(nodeA.position) && positions[1].equals(nodeB.position)) || (positions[0].equals(nodeB.position) && positions[1].equals(nodeA.position));
+    });
+    return foundEdge || null;
+};
+
+const selectNode = (node, nodesForEdge) => {
+    if (!node.userData.originalColor) {
+        node.userData.originalColor = node.material.color.clone();
+    }
+    if (!nodesForEdge.includes(node)) {
+        nodesForEdge.push(node);
+        node.material.color.set('#F3FF9A');
+        return true;
+    } else {
+        nodesForEdge.splice(nodesForEdge.indexOf(node), 1);
+        node.material.color.copy(node.userData.originalColor);
+        return false;
+    }
+};
+
+const resetSelections = (nodesForEdge) => {
+    nodesForEdge.forEach((node) => node.material.color.copy(node.userData.originalColor));
+    nodesForEdge.length = 0;
+};
+
 export function updatePointer(event, pointer) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-
-export function isConnected(nodeA, nodeB, edges) {
-    const foundEdge = edges.find((edge) => {
-        const positions = edge.geometry.parameters.path.points;
-        return (positions[0].equals(nodeA.position) && positions[1].equals(nodeB.position)) ||
-               (positions[0].equals(nodeB.position) && positions[1].equals(nodeA.position));
-    });
-    return foundEdge || null;
 }
 
 export function updateEdge(edge) {
@@ -22,20 +41,6 @@ export function updateEdge(edge) {
     edge.geometry = newEdge.geometry;
     edge.sprite.position.copy(newEdge.sprite.position);
     edge.sprite.material.map = newEdge.sprite.material.map;
-    return edge;
-}
-
-export function selectStart(clickedNode, nodes) {
-    for (let i = 0; i < nodes.length; i++) {
-        if (nodes[i].userData.start) {
-            nodes[i].userData.start = false;
-            nodes[i].material.color.set('#02C874');
-            break;
-        }
-    }
-    clickedNode.userData.start = true;
-    clickedNode.material.color.set('#FF0000');
-    return nodes;
 }
 
 export function deleteNode(clickedNode, scene, nodes, edges) {
@@ -52,21 +57,10 @@ export function deleteNode(clickedNode, scene, nodes, edges) {
             edges.splice(i, 1);
         }
     }
-    return [nodes, edges];
 }
 
 export function connectNodes(clickedNode, scene, edges, nodesForEdge) {
-    if (!clickedNode.userData.originalColor) {
-        clickedNode.userData.originalColor = clickedNode.material.color.clone();
-    }
-    if (!nodesForEdge.includes(clickedNode)) {
-        nodesForEdge.push(clickedNode);
-        clickedNode.material.color.set('#F3FF9A');
-    } else {
-        nodesForEdge = nodesForEdge.filter((node) => node !== clickedNode);
-        clickedNode.material.color.copy(clickedNode.userData.originalColor);
-        return nodesForEdge;
-    }
+    if (!selectNode(clickedNode, nodesForEdge)) return;
     if (nodesForEdge.length === 2) {
         const [node1, node2] = nodesForEdge;
         if (!isConnected(node1, node2, edges)) {
@@ -75,26 +69,12 @@ export function connectNodes(clickedNode, scene, edges, nodesForEdge) {
             scene.add(edge.sprite);
             edges.push(edge);
         }
-        nodesForEdge.forEach((node) => {
-            node.material.color.copy(node.userData.originalColor);
-        });
-        nodesForEdge = [];
+        resetSelections(nodesForEdge);
     }
-    return nodesForEdge;
 }
 
 export function disconnectNodes(clickedNode, scene, edges, nodesForEdge) {
-    if (!clickedNode.userData.originalColor) {
-        clickedNode.userData.originalColor = clickedNode.material.color.clone();
-    }
-    if (!nodesForEdge.includes(clickedNode)) {
-        nodesForEdge.push(clickedNode);
-        clickedNode.material.color.set('#F3FF9A');
-    } else {
-        nodesForEdge = nodesForEdge.filter((node) => node !== clickedNode);
-        clickedNode.material.color.copy(clickedNode.userData.originalColor);
-        return nodesForEdge;
-    }
+    if (!selectNode(clickedNode, nodesForEdge)) return;
     if (nodesForEdge.length === 2) {
         const [node1, node2] = nodesForEdge;
         const foundEdge = isConnected(node1, node2, edges);
@@ -102,16 +82,22 @@ export function disconnectNodes(clickedNode, scene, edges, nodesForEdge) {
             scene.remove(foundEdge);
             scene.remove(foundEdge.sprite);
             const index = edges.indexOf(foundEdge);
-            if (index > -1) {
-                edges.splice(index, 1);
-            }
+            if (index > -1) edges.splice(index, 1);
         }
-        nodesForEdge.forEach((node) => {
-            node.material.color.copy(node.userData.originalColor);
-        });
-        nodesForEdge = [];
+        resetSelections(nodesForEdge);
     }
-    return nodesForEdge;
+}
+
+export function selectStart(clickedNode, nodes) {
+    for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].userData.start) {
+            nodes[i].userData.start = false;
+            nodes[i].material.color.set('#02C874');
+            break;
+        }
+    }
+    clickedNode.userData.start = true;
+    clickedNode.material.color.set('#FF0000');
 }
 
 export function createExample(scene, nodes, edges, numNodes, randomEdges, radius, nodeRadius) {

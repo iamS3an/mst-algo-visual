@@ -29,9 +29,7 @@ export function createScene(container) {
         { type: 'pointerup', handler: handlePointerUp, options: false },
     ];
 
-    const bindEventListeners = () => {
-        eventListeners.forEach((evt) => window.addEventListener(evt.type, evt.handler, evt.options));
-    };
+    const bindEventListeners = () => eventListeners.forEach((evt) => window.addEventListener(evt.type, evt.handler, evt.options));
     bindEventListeners();
 
     const animate = () => {
@@ -41,17 +39,15 @@ export function createScene(container) {
     };
     animate();
 
-    const unbindEventListeners = () => {
-        eventListeners.forEach((evt) => window.removeEventListener(evt.type, evt.handler, evt.options));
-    };
+    const unbindEventListeners = () => eventListeners.forEach((evt) => window.removeEventListener(evt.type, evt.handler, evt.options));
 
     const toggleMode = (modeName) => {
-        state.modes[modeName] = !state.modes[modeName];
-        Object.keys(state.modes).forEach(key => {
-            if (key !== modeName) state.modes[key] = false;
+        const newModeValue = !state.modes[modeName];
+        Object.keys(state.modes).forEach((key) => {
+            state.modes[key] = key === modeName ? newModeValue : false;
         });
-        state.nodesForEdge.forEach(node => node.material.color.copy(node.userData.originalColor));
-        state.nodesForEdge = [];
+        state.nodesForEdge.forEach((node) => node.material.color.copy(node.userData.originalColor));
+        state.nodesForEdge.length = 0;
     };
 
     return {
@@ -66,6 +62,7 @@ export function createScene(container) {
             edges.splice(0);
         },
         addNode: () => {
+            toggleMode('addNode');
             const node = createNode(nodeRadius);
             scene.add(node);
             nodes.push(node);

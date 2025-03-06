@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { updatePointer, deleteNode, connectNodes, disconnectNodes, updateEdge, selectStart } from './utils';
+import { updatePointer, updateEdge, deleteNode, connectNodes, disconnectNodes, selectStart } from './utils';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
     updatePointer(event, pointer);
@@ -18,22 +18,19 @@ export function onPointerDown(event, params) {
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
         if (state.modes.removeNode) {
-            nodes, edges = deleteNode(intersects[0].object, scene, nodes, edges);
-            return;
-        }else if (state.modes.addEdge) {
-            state.nodesForEdge = connectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
-            return;
-        }else if (state.modes.removeEdge) {
-            state.nodesForEdge = disconnectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
-            return;
-        }else if (state.modes.selectStart) {
-            nodes = selectStart(intersects[0].object, nodes);
-            return;
+            deleteNode(intersects[0].object, scene, nodes, edges);
+        } else if (state.modes.addEdge) {
+            connectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
+        } else if (state.modes.removeEdge) {
+            disconnectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
+        } else if (state.modes.selectStart) {
+            selectStart(intersects[0].object, nodes);
+        } else {
+            state.selectedNode = intersects[0].object;
+            controls.enabled = false;
+            plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.selectedNode.position);
+            offset.copy(intersects[0].point).sub(state.selectedNode.position);
         }
-        state.selectedNode = intersects[0].object;
-        controls.enabled = false;
-        plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.selectedNode.position);
-        offset.copy(intersects[0].point).sub(state.selectedNode.position);
     }
 }
 
@@ -47,7 +44,7 @@ export function onPointerMove(event, params) {
         for (let i = 0; i < edges.length; i++) {
             const { nodeA, nodeB } = edges[i].userData;
             if (nodeA === state.selectedNode || nodeB === state.selectedNode) {
-                edges[i] = updateEdge(edges[i]);
+                updateEdge(edges[i]);
             }
         }
     }

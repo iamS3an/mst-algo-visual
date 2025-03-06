@@ -22,104 +22,54 @@ function Scene() {
     };
 
     const handleAddNode = () => {
+        setActiveMode((prev) => (prev === 'addNode' ? null : 'addNode'));
         managerRef.current?.addNode();
     };
 
     const handleRemoveNode = () => {
-        setActiveMode(prev => prev === "removeNode" ? null : "removeNode");
+        setActiveMode((prev) => (prev === 'removeNode' ? null : 'removeNode'));
         managerRef.current?.removeNode();
     };
 
     const handleAddEdge = () => {
-        setActiveMode(prev => prev === "addEdge" ? null : "addEdge");
+        setActiveMode((prev) => (prev === 'addEdge' ? null : 'addEdge'));
         managerRef.current?.addEdge();
     };
 
     const handleRemoveEdge = () => {
-        setActiveMode(prev => prev === "removeEdge" ? null : "removeEdge");
+        setActiveMode((prev) => (prev === 'removeEdge' ? null : 'removeEdge'));
         managerRef.current?.removeEdge();
     };
 
     const handleSelectStart = () => {
-        setActiveMode(prev => prev === "selectStart" ? null : "selectStart");
+        setActiveMode((prev) => (prev === 'selectStart' ? null : 'selectStart'));
         managerRef.current?.selectStart();
+    };
+
+    const notificationStyle = {
+        position: 'absolute',
+        top: '10px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        padding: '10px 20px',
+        backgroundColor: '#F3FF9A',
+        color: '#000000',
+        border: '1px solid #000',
+        borderRadius: '5px',
+        zIndex: '9999',
+    };
+
+    const modeMessages = {
+        removeNode: 'Select a node to delete',
+        addEdge: 'Select two nodes to connect',
+        removeEdge: 'Select two nodes to disconnect',
+        selectStart: 'Select a start node',
     };
 
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
             <div ref={containerRef}></div>
-            {activeMode === "removeNode" && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        padding: '10px 20px',
-                        backgroundColor: '#F3FF9A',
-                        color: '#000000',
-                        border: '1px solid #000',
-                        borderRadius: '5px',
-                        zIndex: '9999',
-                    }}
-                >
-                    Select a nodes to delete
-                </div>
-            )}
-            {activeMode === "addEdge" && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        padding: '10px 20px',
-                        backgroundColor: '#F3FF9A',
-                        color: '#000000',
-                        border: '1px solid #000',
-                        borderRadius: '5px',
-                        zIndex: '9999',
-                    }}
-                >
-                    Select two nodes to connect
-                </div>
-            )}
-            {activeMode === "removeEdge" && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        padding: '10px 20px',
-                        backgroundColor: '#F3FF9A',
-                        color: '#000000',
-                        border: '1px solid #000',
-                        borderRadius: '5px',
-                        zIndex: '9999',
-                    }}
-                >
-                    Select two nodes to disconnect
-                </div>
-            )}
-            {activeMode === "selectStart" && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        padding: '10px 20px',
-                        backgroundColor: '#F3FF9A',
-                        color: '#000000',
-                        border: '1px solid #000',
-                        borderRadius: '5px',
-                        zIndex: '9999',
-                    }}
-                >
-                    Select a start node
-                </div>
-            )}
+            {activeMode in modeMessages && <div style={notificationStyle}>{modeMessages[activeMode]}</div>}
             <button
                 onClick={handleReload}
                 style={{
@@ -262,6 +212,6 @@ function Scene() {
             </button>
         </div>
     );
-};
+}
 
 export default Scene;
