@@ -38,6 +38,23 @@ export function selectStart(clickedNode, nodes) {
     return nodes;
 }
 
+export function deleteNode(clickedNode, scene, nodes, edges) {
+    scene.remove(clickedNode);
+    const foundIndex = nodes.indexOf(clickedNode);
+    if (foundIndex > -1) {
+        nodes.splice(foundIndex, 1);
+    }
+    for (let i = edges.length - 1; i >= 0; i--) {
+        const { nodeA, nodeB } = edges[i].userData;
+        if (nodeA === clickedNode || nodeB === clickedNode) {
+            scene.remove(edges[i]);
+            scene.remove(edges[i].sprite);
+            edges.splice(i, 1);
+        }
+    }
+    return [nodes, edges];
+}
+
 export function connectNodes(clickedNode, scene, edges, nodesForEdge) {
     if (!clickedNode.userData.originalColor) {
         clickedNode.userData.originalColor = clickedNode.material.color.clone();
@@ -61,7 +78,7 @@ export function connectNodes(clickedNode, scene, edges, nodesForEdge) {
         nodesForEdge.forEach((node) => {
             node.material.color.copy(node.userData.originalColor);
         });
-        return [];
+        nodesForEdge = [];
     }
     return nodesForEdge;
 }
@@ -84,12 +101,15 @@ export function disconnectNodes(clickedNode, scene, edges, nodesForEdge) {
         if (foundEdge) {
             scene.remove(foundEdge);
             scene.remove(foundEdge.sprite);
-            edges = edges.filter((edge) => edge !== foundEdge);
+            const index = edges.indexOf(foundEdge);
+            if (index > -1) {
+                edges.splice(index, 1);
+            }
         }
         nodesForEdge.forEach((node) => {
             node.material.color.copy(node.userData.originalColor);
         });
-        return [];
+        nodesForEdge = [];
     }
     return nodesForEdge;
 }

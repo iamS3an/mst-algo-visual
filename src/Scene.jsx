@@ -25,6 +25,11 @@ function Scene() {
         managerRef.current?.addNode();
     };
 
+    const handleRemoveNode = () => {
+        setActiveMode(prev => prev === "removeNode" ? null : "removeNode");
+        managerRef.current?.removeNode();
+    };
+
     const handleAddEdge = () => {
         setActiveMode(prev => prev === "addEdge" ? null : "addEdge");
         managerRef.current?.addEdge();
@@ -43,6 +48,24 @@ function Scene() {
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
             <div ref={containerRef}></div>
+            {activeMode === "removeNode" && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        padding: '10px 20px',
+                        backgroundColor: '#F3FF9A',
+                        color: '#000000',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                        zIndex: '9999',
+                    }}
+                >
+                    Select a nodes to delete
+                </div>
+            )}
             {activeMode === "addEdge" && (
                 <div
                     style={{
@@ -158,11 +181,31 @@ function Scene() {
                 Add Node
             </button>
             <button
-                onClick={handleAddEdge}
+                onClick={handleRemoveNode}
                 style={{
                     position: 'absolute',
                     top: '20px',
                     left: '150px',
+                    padding: '10px 20px',
+                    backgroundColor: '#02C874',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                    transition: 'background-color 0.3s ease',
+                }}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = '#02A05D')}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = '#02C874')}
+            >
+                Remove Node
+            </button>
+            <button
+                onClick={handleAddEdge}
+                style={{
+                    position: 'absolute',
+                    top: '80px',
+                    left: '20px',
                     padding: '10px 20px',
                     backgroundColor: '#7B7B7B',
                     color: '#FFFFFF',
@@ -181,8 +224,8 @@ function Scene() {
                 onClick={handleRemoveEdge}
                 style={{
                     position: 'absolute',
-                    top: '20px',
-                    left: '280px',
+                    top: '80px',
+                    left: '150px',
                     padding: '10px 20px',
                     backgroundColor: '#7B7B7B',
                     color: '#FFFFFF',
@@ -201,7 +244,7 @@ function Scene() {
                 onClick={handleSelectStart}
                 style={{
                     position: 'absolute',
-                    top: '80px',
+                    top: '140px',
                     left: '20px',
                     padding: '10px 20px',
                     backgroundColor: '#FF0000',

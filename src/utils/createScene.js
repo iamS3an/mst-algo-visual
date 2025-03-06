@@ -60,7 +60,7 @@ export function createScene(container) {
             nodes.forEach((node) => scene.remove(node));
             edges.forEach((edge) => {
                 scene.remove(edge);
-                if (edge.sprite) scene.remove(edge.sprite);
+                scene.remove(edge.sprite);
             });
             nodes.splice(0);
             edges.splice(0);
@@ -69,6 +69,9 @@ export function createScene(container) {
             const node = createNode(nodeRadius);
             scene.add(node);
             nodes.push(node);
+        },
+        removeNode: () => {
+            toggleMode('removeNode');
         },
         addEdge: () => {
             toggleMode('addEdge');
