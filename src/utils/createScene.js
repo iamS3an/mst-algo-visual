@@ -10,12 +10,7 @@ export function createScene(container) {
     const nodes = [];
     const edges = [];
 
-    const exampleNodes = 10;
-    const randomEdges = 5;
-    const radius = 60;
-    const nodeRadius = 5;
-
-    createExample(scene, nodes, edges, exampleNodes, randomEdges, radius, nodeRadius);
+    createExample(scene, nodes, edges);
 
     const handleResize = () => onWindowResize({ camera, renderer });
     const handlePointerDown = (event) => onPointerDown(event, { pointer, raycaster, camera, nodes, controls, plane, offset, state, scene, edges });
@@ -40,7 +35,7 @@ export function createScene(container) {
     animate();
 
     const unbindEventListeners = () => eventListeners.forEach((evt) => window.removeEventListener(evt.type, evt.handler, evt.options));
-
+    
     const toggleMode = (modeName) => {
         const newModeValue = !state.modes[modeName];
         Object.keys(state.modes).forEach((key) => {
@@ -50,19 +45,27 @@ export function createScene(container) {
         state.nodesForEdge.length = 0;
     };
 
+    const clearElement = () => {
+        toggleMode(null);
+        nodes.forEach((node) => scene.remove(node));
+        nodes.length = 0;
+        edges.forEach((edge) => {
+            scene.remove(edge);
+            scene.remove(edge.sprite);
+        });
+        edges.length = 0;
+    }
+
     return {
-        reload: () => window.location.reload(),
+        reload: () => {
+            clearElement();
+            createExample(scene, nodes, edges);
+        },
         clearScene: () => {
-            nodes.forEach((node) => scene.remove(node));
-            edges.forEach((edge) => {
-                scene.remove(edge);
-                scene.remove(edge.sprite);
-            });
-            nodes.splice(0);
-            edges.splice(0);
+            clearElement();
         },
         addNode: () => {
-            toggleMode('addNode');
+            toggleMode(null);
             createNode(scene, nodes, nodeRadius);
         },
         removeNode: () => {

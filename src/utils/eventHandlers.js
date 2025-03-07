@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { selectNodeForEdge } from './utils';
 import { updateEdge, createEdge, deleteEdge } from './edges';
 import { deleteNode, selectStart } from './nodes';
 
@@ -19,16 +20,21 @@ export function onPointerDown(event, params) {
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
+        const clickedNode = intersects[0].object;
         if (state.modes.removeNode) {
-            deleteNode(intersects[0].object, scene, nodes, edges);
+            deleteNode(clickedNode, scene, nodes, edges);
         } else if (state.modes.addEdge) {
-            createEdge(intersects[0].object, scene, edges, state.nodesForEdge);
+            if (selectNodeForEdge(clickedNode, state.nodesForEdge) === 2) {
+                createEdge(scene, edges, state.nodesForEdge);
+            }
         } else if (state.modes.removeEdge) {
-            deleteEdge(intersects[0].object, scene, edges, state.nodesForEdge);
+            if (selectNodeForEdge(clickedNode, state.nodesForEdge) === 2) {
+                deleteEdge(scene, edges, state.nodesForEdge);
+            }
         } else if (state.modes.selectStart) {
-            selectStart(intersects[0].object, nodes);
+            selectStart(clickedNode, nodes);
         } else {
-            state.selectedNode = intersects[0].object;
+            state.selectedNode = clickedNode;
             controls.enabled = false;
             plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.selectedNode.position);
             offset.copy(intersects[0].point).sub(state.selectedNode.position);

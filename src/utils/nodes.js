@@ -10,9 +10,8 @@ const defineNode = (nodeRadius, x, y, z) => {
     const node = new THREE.Mesh(geometry, material);
     node.position.set(x, y, z);
     node.userData.start = false;
-
     return node;
-}
+};
 
 export function createNode(scene, nodes, nodeRadius, x = 0, y = 0, z = 0) {
     const node = defineNode(nodeRadius, x, y, z);

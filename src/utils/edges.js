@@ -1,5 +1,13 @@
 import * as THREE from 'three';
-import { isConnected, selectNode, resetSelections } from './utils';
+import { resetSelected } from './utils';
+
+const isConnected = (nodeA, nodeB, edges) => {
+    const foundEdge = edges.find((edge) => {
+        const positions = edge.geometry.parameters.path.points;
+        return (positions[0].equals(nodeA.position) && positions[1].equals(nodeB.position)) || (positions[0].equals(nodeB.position) && positions[1].equals(nodeA.position));
+    });
+    return foundEdge || null;
+};
 
 const createWeightTexture = (weight) => {
     const canvas = document.createElement('canvas');
@@ -50,31 +58,25 @@ export function updateEdge(edge) {
     edge.sprite.material.map = newEdge.sprite.material.map;
 }
 
-export function createEdge(clickedNode, scene, edges, nodesForEdge) {
-    if (!selectNode(clickedNode, nodesForEdge)) return;
-    if (nodesForEdge.length === 2) {
-        const [node1, node2] = nodesForEdge;
-        if (!isConnected(node1, node2, edges)) {
-            const edge = defineEdge(node1, node2);
-            scene.add(edge);
-            scene.add(edge.sprite);
-            edges.push(edge);
-        }
-        resetSelections(nodesForEdge);
+export function createEdge(scene, edges, nodesForEdge) {
+    const [node1, node2] = nodesForEdge;
+    if (!isConnected(node1, node2, edges)) {
+        const edge = defineEdge(node1, node2);
+        scene.add(edge);
+        scene.add(edge.sprite);
+        edges.push(edge);
     }
+    resetSelected(nodesForEdge);
 }
 
-export function deleteEdge(clickedNode, scene, edges, nodesForEdge) {
-    if (!selectNode(clickedNode, nodesForEdge)) return;
-    if (nodesForEdge.length === 2) {
-        const [node1, node2] = nodesForEdge;
-        const foundEdge = isConnected(node1, node2, edges);
-        if (foundEdge) {
-            scene.remove(foundEdge);
-            scene.remove(foundEdge.sprite);
-            const index = edges.indexOf(foundEdge);
-            if (index > -1) edges.splice(index, 1);
-        }
-        resetSelections(nodesForEdge);
+export function deleteEdge(scene, edges, nodesForEdge) {
+    const [node1, node2] = nodesForEdge;
+    const foundEdge = isConnected(node1, node2, edges);
+    if (foundEdge) {
+        scene.remove(foundEdge);
+        scene.remove(foundEdge.sprite);
+        const index = edges.indexOf(foundEdge);
+        if (index > -1) edges.splice(index, 1);
     }
+    resetSelected(nodesForEdge);
 }
