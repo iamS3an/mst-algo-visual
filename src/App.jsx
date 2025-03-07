@@ -1,8 +1,8 @@
 import './App.css';
-import Scene from './Scene';
+import Interface from './components/Interface';
 
 function App() {
-    return <Scene />;
+    return <Interface />;
 }
 
 export default App;

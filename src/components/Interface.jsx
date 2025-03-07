@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { createScene } from './utils/createScene';
+import { createScene } from '../scene/createScene';
 
-function Scene() {
+function Interface() {
     const containerRef = useRef(null);
     const managerRef = useRef(null);
     const [activeMode, setActiveMode] = useState(null);
@@ -300,4 +300,4 @@ function Scene() {
     );
 }
 
-export default Scene;
+export default Interface;

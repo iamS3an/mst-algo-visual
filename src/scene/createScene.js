@@ -1,6 +1,6 @@
 import { initScene } from './initScene';
-import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from './eventHandlers';
-import { createExample } from './utils';
+import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/eventHandlers';
+import { createExample } from '../utils/utils';
 import { createNode } from './nodes';
 
 export function createScene(container) {

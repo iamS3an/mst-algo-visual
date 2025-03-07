@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { selectNodeForEdge } from './utils';
-import { updateEdge, createEdge, deleteEdge } from './edges';
-import { deleteNode, selectStart } from './nodes';
+import { setSelected, resetSelected } from './utils';
+import { updateEdge, createEdge, deleteEdge } from '../scene/edges';
+import { deleteNode, chooseStart } from '../scene/nodes';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -24,15 +24,17 @@ export function onPointerDown(event, params) {
         if (state.modes.removeNode) {
             deleteNode(clickedNode, scene, nodes, edges);
         } else if (state.modes.addEdge) {
-            if (selectNodeForEdge(clickedNode, state.nodesForEdge) === 2) {
+            if (setSelected(clickedNode, state.nodesForEdge) === 2) {
                 createEdge(scene, edges, state.nodesForEdge);
+                resetSelected(state.nodesForEdge);
             }
         } else if (state.modes.removeEdge) {
-            if (selectNodeForEdge(clickedNode, state.nodesForEdge) === 2) {
+            if (setSelected(clickedNode, state.nodesForEdge) === 2) {
                 deleteEdge(scene, edges, state.nodesForEdge);
+                resetSelected(state.nodesForEdge);
             }
         } else if (state.modes.selectStart) {
-            selectStart(clickedNode, nodes);
+            chooseStart(clickedNode, nodes);
         } else {
             state.selectedNode = clickedNode;
             controls.enabled = false;

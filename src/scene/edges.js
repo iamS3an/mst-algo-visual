@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { resetSelected } from './utils';
 
 const isConnected = (nodeA, nodeB, edges) => {
     const foundEdge = edges.find((edge) => {
@@ -66,7 +65,6 @@ export function createEdge(scene, edges, nodesForEdge) {
         scene.add(edge.sprite);
         edges.push(edge);
     }
-    resetSelected(nodesForEdge);
 }
 
 export function deleteEdge(scene, edges, nodesForEdge) {
@@ -78,5 +76,4 @@ export function deleteEdge(scene, edges, nodesForEdge) {
         const index = edges.indexOf(foundEdge);
         if (index > -1) edges.splice(index, 1);
     }
-    resetSelected(nodesForEdge);
 }

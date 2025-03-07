@@ -1,7 +1,7 @@
-import { createEdge } from './edges';
-import { createNode } from './nodes';
+import { createEdge } from '../scene/edges';
+import { createNode } from '../scene/nodes';
 
-export function selectNodeForEdge(node, nodesForEdge) {
+export function setSelected(node, nodesForEdge) {
     if (!node.userData.originalColor) {
         node.userData.originalColor = node.material.color.clone();
     }

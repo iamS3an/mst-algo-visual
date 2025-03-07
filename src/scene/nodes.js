@@ -35,7 +35,7 @@ export function deleteNode(clickedNode, scene, nodes, edges) {
     }
 }
 
-export function selectStart(clickedNode, nodes) {
+export function chooseStart(clickedNode, nodes) {
     for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].userData.start) {
             nodes[i].userData.start = false;
