@@ -5,6 +5,9 @@ function Scene() {
     const containerRef = useRef(null);
     const managerRef = useRef(null);
     const [activeMode, setActiveMode] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [sliderValue, setSliderValue] = useState(0);
+    const [maxSliderValue, setMaxSliderValue] = useState(100);
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
@@ -46,17 +49,65 @@ function Scene() {
         managerRef.current?.selectStart();
     };
 
-    const notificationStyle = {
+    const handlePlayPause = () => {
+        setIsPlaying(prev => !prev);
+        if (!isPlaying) {
+            managerRef.current?.startAlgorithm(sliderValue);
+        } else {
+            managerRef.current?.pauseAlgorithm();
+        }
+    };
+
+    const handleSliderChange = (e) => {
+        const newValue = parseInt(e.target.value);
+        setSliderValue(newValue);
+        managerRef.current?.setAlgorithmProgress(newValue);
+    };
+
+    const tipStyle = {
         position: 'absolute',
         top: '10px',
         left: '50%',
         transform: 'translateX(-50%)',
-        padding: '10px 20px',
+        padding: '5px 20px',
         backgroundColor: '#F3FF9A',
         color: '#000000',
         border: '1px solid #000',
         borderRadius: '5px',
         zIndex: '9999',
+    };
+
+    const controlsContainerStyle = {
+        position: 'absolute',
+        bottom: '10px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+    };
+
+    const playButtonStyle = {
+        padding: '12px',
+        width: '20px',
+        height: '20px',
+        borderRadius: '50%',
+        backgroundColor: 'transparent',
+        color: isPlaying ? '#FF5722' : '#4CAF50',
+        border: `2px solid ${isPlaying ? '#FF5722' : '#4CAF50'}`,
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: '15px',
+        marginBottom: '1px',
+        transition: 'color 0.3s ease, border-color 0.3s ease',
+    };
+
+    const sliderStyle = {
+        width: '300px',
+        margin: '0 10px',
     };
 
     const modeMessages = {
@@ -69,7 +120,36 @@ function Scene() {
     return (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
             <div ref={containerRef}></div>
-            {activeMode in modeMessages && <div style={notificationStyle}>{modeMessages[activeMode]}</div>}
+            {activeMode in modeMessages && <div style={tipStyle}>{modeMessages[activeMode]}</div>}
+            <div style={controlsContainerStyle}>
+                <button
+                    onClick={handlePlayPause}
+                    style={playButtonStyle}
+                    onMouseEnter={(e) => {
+                        e.target.style.color = isPlaying ? '#E64A19' : '#388E3C';
+                        e.target.style.borderColor = isPlaying ? '#E64A19' : '#388E3C';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.color = isPlaying ? '#FF5722' : '#4CAF50';
+                        e.target.style.borderColor = isPlaying ? '#FF5722' : '#4CAF50';
+                    }}
+                >
+                    {isPlaying ? '⏸' : '▶'}
+                </button>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span style={{ marginRight: '10px' }}>0</span>
+                    <input
+                        type="range"
+                        min="0"
+                        max={maxSliderValue}
+                        value={sliderValue}
+                        onChange={handleSliderChange}
+                        style={sliderStyle}
+                    />
+                    <span style={{ marginLeft: '10px' }}>{maxSliderValue}</span>
+                </div>
+            </div>
+
             <button
                 onClick={handleReload}
                 style={{
