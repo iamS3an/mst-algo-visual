@@ -63,9 +63,7 @@ export function createScene(container) {
         },
         addNode: () => {
             toggleMode('addNode');
-            const node = createNode(nodeRadius);
-            scene.add(node);
-            nodes.push(node);
+            createNode(scene, nodes, nodeRadius);
         },
         removeNode: () => {
             toggleMode('removeNode');

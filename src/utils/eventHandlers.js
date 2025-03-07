@@ -1,8 +1,10 @@
 import * as THREE from 'three';
-import { updatePointer, updateEdge, deleteNode, connectNodes, disconnectNodes, selectStart } from './utils';
+import { updateEdge, createEdge, deleteEdge } from './edges';
+import { deleteNode, selectStart } from './nodes';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
-    updatePointer(event, pointer);
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
 };
 
@@ -20,9 +22,9 @@ export function onPointerDown(event, params) {
         if (state.modes.removeNode) {
             deleteNode(intersects[0].object, scene, nodes, edges);
         } else if (state.modes.addEdge) {
-            connectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
+            createEdge(intersects[0].object, scene, edges, state.nodesForEdge);
         } else if (state.modes.removeEdge) {
-            disconnectNodes(intersects[0].object, scene, edges, state.nodesForEdge);
+            deleteEdge(intersects[0].object, scene, edges, state.nodesForEdge);
         } else if (state.modes.selectStart) {
             selectStart(intersects[0].object, nodes);
         } else {
