@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { createScene } from '../scene/createScene';
+import ControlButton from './ControlButton';
+import PlaybackControls from './PlaybackControls';
+import '../styles/Interface.css';
 
 function Interface() {
     const containerRef = useRef(null);
@@ -52,126 +55,19 @@ function Interface() {
     };
 
     const handlePlayPause = () => {
+        setActiveMode(null);
         setIsPlaying(prev => !prev);
         if (!isPlaying) {
-            managerRef.current?.startAlgorithm(sliderValue);
+            managerRef.current?.startAlgo(sliderValue);
         } else {
-            managerRef.current?.pauseAlgorithm();
+            managerRef.current?.pauseAlgo();
         }
     };
 
     const handleSliderChange = (e) => {
         const newValue = parseInt(e.target.value);
         setSliderValue(newValue);
-        managerRef.current?.setAlgorithmProgress(newValue);
-    };
-
-    const styles = {
-        container: {
-            position: 'fixed', 
-            top: 0, 
-            left: 0, 
-            width: '100%', 
-            height: '100%'
-        },
-        tipStyle: {
-            position: 'absolute',
-            top: '10px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            padding: '5px 20px',
-            backgroundColor: '#F3FF9A',
-            color: '#000000',
-            border: '1px solid #000',
-            borderRadius: '5px',
-            zIndex: '9999',
-        },
-        controlsContainer: {
-            position: 'absolute',
-            bottom: '10px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            backgroundColor: 'transparent',
-        },
-        playButton: {
-            padding: '12px',
-            width: '20px',
-            height: '20px',
-            borderRadius: '50%',
-            backgroundColor: 'transparent',
-            color: isPlaying ? '#FF5722' : '#4CAF50',
-            border: `2px solid ${isPlaying ? '#FF5722' : '#4CAF50'}`,
-            cursor: 'pointer',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontSize: '15px',
-            marginBottom: '1px',
-            transition: 'color 0.3s ease, border-color 0.3s ease',
-        },
-        sliderContainer: {
-            display: 'flex', 
-            alignItems: 'center', 
-            backgroundColor: 'transparent', 
-            padding: '5px 10px'
-        },
-        slider: {
-            width: '300px',
-            margin: '0 10px',
-            appearance: 'none',
-            height: '6px',
-            borderRadius: '3px',
-            background: `linear-gradient(to right, #4CAF50 0%, #4CAF50 ${sliderValue / maxSliderValue * 100}%, #ddd ${sliderValue / maxSliderValue * 100}%, #ddd 100%)`,
-            outline: 'none',
-            transition: 'background 0.3s ease',
-            '&::-webkit-slider-thumb': {
-                appearance: 'none',
-                width: '16px',
-                height: '16px',
-                borderRadius: '50%',
-                background: '#4CAF50',
-                cursor: 'pointer',
-                boxShadow: '0 0 0 3px rgba(76, 175, 80, 0.2)',
-                transition: 'all 0.2s ease',
-            },
-            '&::-moz-range-thumb': {
-                width: '16px',
-                height: '16px',
-                borderRadius: '50%',
-                background: '#4CAF50',
-                cursor: 'pointer',
-                boxShadow: '0 0 0 3px rgba(76, 175, 80, 0.2)',
-                transition: 'all 0.2s ease',
-            },
-            '&:active::-webkit-slider-thumb': {
-                transform: 'scale(1.2)',
-            },
-            '&:active::-moz-range-thumb': {
-                transform: 'scale(1.2)',
-            }
-        },
-        timeDisplay: {
-            fontSize: '12px',
-            color: '#FFFFFF',
-            backgroundColor: 'transparent',
-            padding: '2px 6px',
-            borderRadius: '3px',
-            marginRight: '8px',
-            marginLeft: '8px',
-        },
-        baseButton: {
-            position: 'absolute',
-            padding: '10px 20px',
-            color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-            transition: 'background-color 0.3s ease',
-        }
+        managerRef.current?.setAlgoProgress(newValue);
     };
 
     const buttonConfigs = [
@@ -226,25 +122,6 @@ function Interface() {
         }
     ];
 
-    const CustomButton = ({ config }) => {
-        const [isHovered, setIsHovered] = useState(false);
-        
-        return (
-            <button
-                onClick={config.onClick}
-                style={{
-                    ...styles.baseButton,
-                    ...config.position,
-                    backgroundColor: isHovered ? config.colors.hover : config.colors.default
-                }}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-            >
-                {config.text}
-            </button>
-        );
-    };
-
     const modeMessages = {
         addNode: 'Click anywhere to add a node',
         removeNode: 'Select a node to delete',
@@ -254,47 +131,20 @@ function Interface() {
     };
 
     return (
-        <div style={styles.container}>
+        <div className="interface-container">
             <div ref={containerRef}></div>
-            {activeMode in modeMessages && <div style={styles.tipStyle}>{modeMessages[activeMode]}</div>}
+            {activeMode in modeMessages && <div className="tip-message">{modeMessages[activeMode]}</div>}
             
-            <div style={styles.controlsContainer}>
-                <button
-                    onClick={handlePlayPause}
-                    style={styles.playButton}
-                    onMouseEnter={(e) => {
-                        e.target.style.color = isPlaying ? '#E64A19' : '#388E3C';
-                        e.target.style.borderColor = isPlaying ? '#E64A19' : '#388E3C';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.target.style.color = isPlaying ? '#FF5722' : '#4CAF50';
-                        e.target.style.borderColor = isPlaying ? '#FF5722' : '#4CAF50';
-                    }}
-                >
-                    {isPlaying ? '⏸' : '▶'}
-                </button>
-                <div style={styles.sliderContainer}>
-                    <span style={styles.timeDisplay}>{sliderValue}</span>
-                    <input
-                        type="range"
-                        min="0"
-                        max={maxSliderValue}
-                        value={sliderValue}
-                        onChange={handleSliderChange}
-                        style={styles.slider}
-                        onMouseEnter={(e) => {
-                            e.target.style.background = `linear-gradient(to right, #388E3C 0%, #388E3C ${sliderValue / maxSliderValue * 100}%, #bbb ${sliderValue / maxSliderValue * 100}%, #bbb 100%)`;
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.background = `linear-gradient(to right, #4CAF50 0%, #4CAF50 ${sliderValue / maxSliderValue * 100}%, #ddd ${sliderValue / maxSliderValue * 100}%, #ddd 100%)`;
-                        }}
-                    />
-                    <span style={styles.timeDisplay}>{maxSliderValue}</span>
-                </div>
-            </div>
+            <PlaybackControls 
+                isPlaying={isPlaying} 
+                sliderValue={sliderValue} 
+                maxSliderValue={maxSliderValue} 
+                handlePlayPause={handlePlayPause} 
+                handleSliderChange={handleSliderChange} 
+            />
 
             {buttonConfigs.map(config => (
-                <CustomButton key={config.id} config={config} />
+                <ControlButton key={config.id} config={config} />
             ))}
         </div>
     );

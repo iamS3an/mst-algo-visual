@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 import Interface from './components/Interface';
 
 function App() {
