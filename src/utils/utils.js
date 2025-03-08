@@ -1,30 +1,30 @@
 import { createEdge } from '../scene/edges';
 import { createNode } from '../scene/nodes';
 
-export function setSelected(node, nodesForEdge) {
+export function setSelected(node, selectedNodes) {
     if (!node.userData.originalColor) {
         node.userData.originalColor = node.material.color.clone();
     }
-    if (!nodesForEdge.includes(node)) {
-        nodesForEdge.push(node);
+    if (!selectedNodes.includes(node)) {
+        selectedNodes.push(node);
         node.material.color.set('#F3FF9A');
     } else {
-        nodesForEdge.splice(nodesForEdge.indexOf(node), 1);
+        selectedNodes.splice(selectedNodes.indexOf(node), 1);
         node.material.color.copy(node.userData.originalColor);
     }
-    return nodesForEdge.length;
+    return selectedNodes.length;
 }
 
-export function resetSelected(nodesForEdge) {
-    nodesForEdge.forEach((node) => {
+export function resetSelected(selectedNodes) {
+    selectedNodes.forEach((node) => {
         if (node.userData.originalColor) {
             node.material.color.copy(node.userData.originalColor);
         }
     });
-    nodesForEdge.length = 0;
+    selectedNodes.length = 0;
 }
 
-export function createExample(scene, nodes, edges, radius = 60, numNodes = 8, randomEdges = 5) {
+export function createExample(scene, nodes, edges, numNodes = 8, randomEdges = 5, radius = 60) {
     const randomRadius = radius + (Math.random() * 10 - 5);
     for (let i = 0; i < numNodes; i++) {
         const angle = (i / numNodes) * Math.PI * 2;

@@ -19,7 +19,7 @@ export function createNode(scene, nodes, x = 0, y = 0, z = 0) {
     nodes.push(node);
 }
 
-export function deleteNode(clickedNode, scene, nodes, edges) {
+export function deleteNode(scene, nodes, edges, clickedNode) {
     scene.remove(clickedNode);
     const foundIndex = nodes.indexOf(clickedNode);
     if (foundIndex > -1) {
@@ -35,7 +35,7 @@ export function deleteNode(clickedNode, scene, nodes, edges) {
     }
 }
 
-export function chooseStart(clickedNode, nodes) {
+export function chooseStart(nodes, clickedNode) {
     for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].userData.start) {
             nodes[i].userData.start = false;

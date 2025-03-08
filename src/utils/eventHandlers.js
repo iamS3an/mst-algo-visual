@@ -16,44 +16,43 @@ export function onWindowResize({ camera, renderer }) {
 }
 
 export function onPointerDown(event, params) {
-    const { pointer, raycaster, camera, nodes, controls, plane, offset, state, scene, edges } = params;
+    const { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges } = params;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
-        const clickedNode = intersects[0].object;
         if (state.modes.removeNode) {
-            deleteNode(clickedNode, scene, nodes, edges);
+            deleteNode(scene, nodes, edges, intersects[0].object);
         } else if (state.modes.addEdge) {
-            if (setSelected(clickedNode, state.nodesForEdge) === 2) {
-                createEdge(scene, edges, state.nodesForEdge);
-                resetSelected(state.nodesForEdge);
+            if (setSelected(intersects[0].object, state.selectedNodes) === 2) {
+                createEdge(scene, edges, state.selectedNodes);
+                resetSelected(state.selectedNodes);
             }
         } else if (state.modes.removeEdge) {
-            if (setSelected(clickedNode, state.nodesForEdge) === 2) {
-                deleteEdge(scene, edges, state.nodesForEdge);
-                resetSelected(state.nodesForEdge);
+            if (setSelected(intersects[0].object, state.selectedNodes) === 2) {
+                deleteEdge(scene, edges, state.selectedNodes);
+                resetSelected(state.selectedNodes);
             }
         } else if (state.modes.selectStart) {
-            chooseStart(clickedNode, nodes);
+            chooseStart(nodes, intersects[0].object);
         } else {
-            state.selectedNode = clickedNode;
+            state.clickedNode = intersects[0].object;
             controls.enabled = false;
-            plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.selectedNode.position);
-            offset.copy(intersects[0].point).sub(state.selectedNode.position);
+            plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.clickedNode.position);
+            offset.copy(intersects[0].point).sub(state.clickedNode.position);
         }
     }
 }
 
 export function onPointerMove(event, params) {
-    const { pointer, raycaster, camera, plane, offset, state, edges } = params;
-    if (!state.selectedNode) return;
+    const { camera, pointer, raycaster, plane, offset, state, edges } = params;
+    if (!state.clickedNode) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersection = new THREE.Vector3();
     if (raycaster.ray.intersectPlane(plane, intersection)) {
-        state.selectedNode.position.copy(intersection.sub(offset));
+        state.clickedNode.position.copy(intersection.sub(offset));
         for (let i = 0; i < edges.length; i++) {
             const { nodeA, nodeB } = edges[i].userData;
-            if (nodeA === state.selectedNode || nodeB === state.selectedNode) {
+            if (nodeA === state.clickedNode || nodeB === state.clickedNode) {
                 updateEdge(edges[i]);
             }
         }
@@ -62,6 +61,6 @@ export function onPointerMove(event, params) {
 
 export function onPointerUp(params) {
     const { controls, state } = params;
-    state.selectedNode = null;
+    state.clickedNode = null;
     controls.enabled = true;
 }

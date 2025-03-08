@@ -48,8 +48,8 @@ export function defineEdge(nodeA, nodeB) {
     return edge;
 }
 
-export function createEdge(scene, edges, nodesForEdge) {
-    const [node1, node2] = nodesForEdge;
+export function createEdge(scene, edges, selectedNodes) {
+    const [node1, node2] = selectedNodes;
     if (!isConnected(node1, node2, edges)) {
         const edge = defineEdge(node1, node2);
         scene.add(edge);
@@ -67,8 +67,8 @@ export function updateEdge(edge) {
     edge.sprite.material.map = newEdge.sprite.material.map;
 }
 
-export function deleteEdge(scene, edges, nodesForEdge) {
-    const [node1, node2] = nodesForEdge;
+export function deleteEdge(scene, edges, selectedNodes) {
+    const [node1, node2] = selectedNodes;
     const foundEdge = isConnected(node1, node2, edges);
     if (foundEdge) {
         scene.remove(foundEdge);

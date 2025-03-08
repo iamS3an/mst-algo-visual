@@ -25,7 +25,6 @@ export function initScene(container) {
     const plane = new THREE.Plane();
     const offset = new THREE.Vector3();
     const state = {
-        selectedNode: null,
         modes: {
             removeNode: false,
             addEdge: false,
@@ -34,8 +33,10 @@ export function initScene(container) {
             startAlgo: false,
             pauseAlgo: false,
         },
-        nodesForEdge: [],
-        algoStep: [],
+        clickedNode: null,
+        stepIndex: 0,
+        selectedNodes: [],
+        algoSteps: [],
     };
 
     return { scene, camera, renderer, controls, pointer, raycaster, plane, offset, state };

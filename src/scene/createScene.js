@@ -14,8 +14,8 @@ export function createScene(container) {
     createExample(scene, nodes, edges);
 
     const handleResize = () => onWindowResize({ camera, renderer });
-    const handlePointerDown = (event) => onPointerDown(event, { pointer, raycaster, camera, nodes, controls, plane, offset, state, scene, edges });
-    const handlePointerMove = (event) => onPointerMove(event, { pointer, raycaster, camera, plane, offset, state, edges });
+    const handlePointerDown = (event) => onPointerDown(event, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges });
+    const handlePointerMove = (event) => onPointerMove(event, { camera, pointer, raycaster, plane, offset, state, edges });
     const handlePointerUp = () => onPointerUp({ controls, state });
 
     const eventListeners = [
@@ -25,7 +25,11 @@ export function createScene(container) {
         { type: 'pointerup', handler: handlePointerUp, options: false },
     ];
 
-    const bindEventListeners = () => eventListeners.forEach((evt) => window.addEventListener(evt.type, evt.handler, evt.options));
+    const bindEventListeners = () => {
+        eventListeners.forEach((evt) => {
+            window.addEventListener(evt.type, evt.handler, evt.options);
+        });
+    };
     bindEventListeners();
 
     const animate = () => {
@@ -42,8 +46,8 @@ export function createScene(container) {
         Object.keys(state.modes).forEach((key) => {
             state.modes[key] = key === modeName ? newModeValue : false;
         });
-        state.nodesForEdge.forEach((node) => node.material.color.copy(node.userData.originalColor));
-        state.nodesForEdge.length = 0;
+        state.selectedNodes.forEach((node) => node.material.color.copy(node.userData.originalColor));
+        state.selectedNodes.length = 0;
     };
 
     const clearElement = () => {
