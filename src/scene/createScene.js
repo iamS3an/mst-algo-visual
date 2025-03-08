@@ -72,6 +72,7 @@ export function createScene(container) {
     };
 
     const executeAlgo = async () => {
+        state.lastStep = 1;
         while (state.lastStep <= state.algoSteps.length) {
             await sleep(1000);
             if (!state.modes.isPlaying) {
@@ -117,7 +118,7 @@ export function createScene(container) {
                 state.algoSteps.forEach((obj) => {
                     obj.material.color.copy(obj.userData.originalColor);
                 });
-                state.lastStep = 1;
+                state.lastStep = 0;
             }
         },
         cleanup: () => {

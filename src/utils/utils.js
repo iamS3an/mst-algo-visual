@@ -63,19 +63,16 @@ export function createExample(scene, nodes, edges, numNodes = 9, randomEdges = 4
     createNode(scene, nodes, 10 + Math.random() * 30, Math.random() * 20 - 10, Math.random() * 20 - 10);
     createNode(scene, nodes, -10 - Math.random() * 30, Math.random() * 20 - 10, Math.random() * 20 - 10);
 
-    for (let extraIdx = numNodes - 2; extraIdx < numNodes; extraIdx++) {
-        const extraNode = nodes[extraIdx];
+    for (let i = numNodes - 2; i < numNodes; i++) {
         const distances = [];
         for (let j = 0; j < nodes.length; j++) {
-            if (j !== extraIdx) {
-                const otherNode = nodes[j];
-                const distance = extraNode.position.distanceTo(otherNode.position);
-                distances.push({ index: j, distance: distance });
+            if (j !== i) {
+                distances.push({ index: j, distance: nodes[i].position.distanceTo(nodes[j].position) });
             }
         }
         distances.sort((a, b) => a.distance - b.distance);
         for (let k = 0; k < Math.min(randomEdges, distances.length); k++) {
-            createEdge(scene, edges, [extraNode, nodes[distances[k].index]]);
+            createEdge(scene, edges, [nodes[i], nodes[distances[k].index]]);
         }
     }
 }

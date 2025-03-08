@@ -33,7 +33,7 @@ export function initScene(container) {
             isPlaying: false,
         },
         clickedNode: null,
-        lastStep: 1,
+        lastStep: 0,
         selectedNodes: [],
         algoSteps: [],
     };
