@@ -24,14 +24,14 @@ export function resetSelected(nodesForEdge) {
     nodesForEdge.length = 0;
 }
 
-export function createExample(scene, nodes, edges, radius = 60, numNodes = 10, nodeRadius = 5, randomEdges = 5) {
+export function createExample(scene, nodes, edges, radius = 60, numNodes = 8, randomEdges = 5) {
     const randomRadius = radius + (Math.random() * 10 - 5);
     for (let i = 0; i < numNodes; i++) {
         const angle = (i / numNodes) * Math.PI * 2;
-        const x = randomRadius * Math.cos(angle) + (Math.random() * 6 - 3);
-        const y = randomRadius * Math.sin(angle) + (Math.random() * 6 - 3);
+        const x = randomRadius * Math.cos(angle) + (Math.random() * 30 - 3);
+        const y = randomRadius * Math.sin(angle) + (Math.random() * 30 - 3);
         const z = Math.random() * 40 - 10;
-        createNode(scene, nodes, nodeRadius, x, y, z);
+        createNode(scene, nodes, x, y, z);
     }
 
     const startIndex = Math.floor(Math.random() * numNodes);

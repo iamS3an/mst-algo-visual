@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-const defineNode = (nodeRadius, x, y, z) => {
-    const geometry = new THREE.SphereGeometry(nodeRadius, 32, 32);
+const defineNode = (x, y, z) => {
+    const geometry = new THREE.SphereGeometry(5, 32, 32);
     const material = new THREE.MeshBasicMaterial({
         color: '#02C874',
         transparent: true,
@@ -13,8 +13,8 @@ const defineNode = (nodeRadius, x, y, z) => {
     return node;
 };
 
-export function createNode(scene, nodes, nodeRadius, x = 0, y = 0, z = 0) {
-    const node = defineNode(nodeRadius, x, y, z);
+export function createNode(scene, nodes, x = 0, y = 0, z = 0) {
+    const node = defineNode(x, y, z);
     scene.add(node);
     nodes.push(node);
 }

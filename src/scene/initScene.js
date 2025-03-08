@@ -31,8 +31,11 @@ export function initScene(container) {
             addEdge: false,
             removeEdge: false,
             selectStart: false,
+            startAlgo: false,
+            pauseAlgo: false,
         },
         nodesForEdge: [],
+        algoStep: [],
     };
 
     return { scene, camera, renderer, controls, pointer, raycaster, plane, offset, state };

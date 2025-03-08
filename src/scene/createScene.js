@@ -2,6 +2,7 @@ import { initScene } from './initScene';
 import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/eventHandlers';
 import { createExample } from '../utils/utils';
 import { createNode } from './nodes';
+import { prim } from '../utils/algo';
 
 export function createScene(container) {
     if (container) container.innerHTML = '';
@@ -35,7 +36,7 @@ export function createScene(container) {
     animate();
 
     const unbindEventListeners = () => eventListeners.forEach((evt) => window.removeEventListener(evt.type, evt.handler, evt.options));
-    
+
     const toggleMode = (modeName) => {
         const newModeValue = !state.modes[modeName];
         Object.keys(state.modes).forEach((key) => {
@@ -54,7 +55,7 @@ export function createScene(container) {
             scene.remove(edge.sprite);
         });
         edges.length = 0;
-    }
+    };
 
     return {
         reload: () => {
@@ -66,7 +67,7 @@ export function createScene(container) {
         },
         addNode: () => {
             toggleMode(null);
-            createNode(scene, nodes, nodeRadius);
+            createNode(scene, nodes);
         },
         removeNode: () => {
             toggleMode('removeNode');
@@ -79,6 +80,13 @@ export function createScene(container) {
         },
         selectStart: () => {
             toggleMode('selectStart');
+        },
+        startAlgo: () => {
+            toggleMode('startAlgo');
+            prim(nodes, edges, state);
+        },
+        pauseAlgo: () => {
+            toggleMode('pauseAlgo');
         },
         cleanup: () => {
             unbindEventListeners();

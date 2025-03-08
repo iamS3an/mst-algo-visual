@@ -43,18 +43,9 @@ export function defineEdge(nodeA, nodeB) {
     sprite.position.copy(midPoint);
     sprite.scale.set(5, 5, 1);
     edge.sprite = sprite;
-    edge.userData = { nodeA, nodeB };
+    edge.userData = { nodeA, nodeB, weight };
 
     return edge;
-}
-
-export function updateEdge(edge) {
-    const { nodeA, nodeB } = edge.userData;
-    const newEdge = defineEdge(nodeA, nodeB);
-    edge.geometry.dispose();
-    edge.geometry = newEdge.geometry;
-    edge.sprite.position.copy(newEdge.sprite.position);
-    edge.sprite.material.map = newEdge.sprite.material.map;
 }
 
 export function createEdge(scene, edges, nodesForEdge) {
@@ -65,6 +56,15 @@ export function createEdge(scene, edges, nodesForEdge) {
         scene.add(edge.sprite);
         edges.push(edge);
     }
+}
+
+export function updateEdge(edge) {
+    const { nodeA, nodeB } = edge.userData;
+    const newEdge = defineEdge(nodeA, nodeB);
+    edge.geometry.dispose();
+    edge.geometry = newEdge.geometry;
+    edge.sprite.position.copy(newEdge.sprite.position);
+    edge.sprite.material.map = newEdge.sprite.material.map;
 }
 
 export function deleteEdge(scene, edges, nodesForEdge) {
