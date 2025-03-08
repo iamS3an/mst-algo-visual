@@ -2,28 +2,25 @@ const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function prim(nodes, edges, stepIndex, algoSteps) {
+export async function prim(nodes, edges, algoSteps) {
     const startNode = nodes.find((node) => node.userData && node.userData.start);
     if (!startNode) {
-        return [];
+        return;
     }
     const visited = new Set();
     visited.add(startNode);
     startNode.material.color.set('#007BFF');
+	algoSteps.push(startNode);
     await sleep(1000);
 
     while (visited.size < nodes.length) {
-        if (state.modes.pauseAlgo) {
-            return algoSteps;
-        }
-
         const candidateEdges = edges.filter((edge) => {
             const { nodeA, nodeB } = edge.userData;
             return (visited.has(nodeA) && !visited.has(nodeB)) || (visited.has(nodeB) && !visited.has(nodeA));
         });
 
         if (candidateEdges.length === 0) {
-            return algoSteps;
+            break;
         }
 
         candidateEdges.sort((a, b) => {
@@ -38,12 +35,12 @@ export async function prim(nodes, edges, stepIndex, algoSteps) {
         if (visited.has(nodeA) && !visited.has(nodeB)) {
             visited.add(nodeB);
             nodeB.material.color.set('#007BFF');
+			algoSteps.push(nodeB);
         } else if (visited.has(nodeB) && !visited.has(nodeA)) {
             visited.add(nodeA);
             nodeA.material.color.set('#007BFF');
+			algoSteps.push(nodeA);
         }
         await sleep(1000);
     }
-
-    return algoSteps;
 }

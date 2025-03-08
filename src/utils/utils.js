@@ -24,31 +24,42 @@ export function resetSelected(selectedNodes) {
     selectedNodes.length = 0;
 }
 
-export function createExample(scene, nodes, edges, numNodes = 8, randomEdges = 5, radius = 60) {
-    const randomRadius = radius + (Math.random() * 10 - 5);
-    for (let i = 0; i < numNodes; i++) {
-        const angle = (i / numNodes) * Math.PI * 2;
-        const x = randomRadius * Math.cos(angle) + (Math.random() * 30 - 3);
-        const y = randomRadius * Math.sin(angle) + (Math.random() * 30 - 3);
+export function createExample(scene, nodes, edges, numNodes = 9, randomEdges = 4, radius = 80) {
+    const randomRadiusX = radius + (Math.random() * 10 - 5);
+    const randomRadiusY = radius * 0.7 + (Math.random() * 10 - 5);
+    for (let i = 0; i < (numNodes - 2); i++) {
+        const angle = (i / (numNodes - 2)) * Math.PI * 2;
+        const x = randomRadiusX * Math.cos(angle) + (Math.random() * 6 - 3);
+        const y = randomRadiusY * Math.sin(angle) + (Math.random() * 6 - 3);
         const z = Math.random() * 40 - 10;
         createNode(scene, nodes, x, y, z);
     }
 
-    const startIndex = Math.floor(Math.random() * numNodes);
+    const startIndex = Math.floor(Math.random() * (numNodes - 2));
     const startNode = nodes[startIndex];
     startNode.material.color.set('#FF0000');
     startNode.userData.start = true;
 
-    for (let i = 0; i < numNodes; i++) {
-        createEdge(scene, edges, [nodes[i], nodes[(i + 1) % numNodes]]);
+    for (let i = 0; i < (numNodes - 2); i++) {
+        createEdge(scene, edges, [nodes[i], nodes[(i + 1) % (numNodes - 2)]]);
     }
 
-    for (let i = 0; i < randomEdges; i++) {
-        const nodeAIndex = Math.floor(Math.random() * numNodes);
-        let nodeBIndex = Math.floor(Math.random() * numNodes);
-        while (nodeAIndex === nodeBIndex) {
-            nodeBIndex = Math.floor(Math.random() * numNodes);
+    createNode(scene, nodes, 10 + Math.random() * 30, Math.random() * 20 - 10, Math.random() * 20 - 10);
+    createNode(scene, nodes, -10 - Math.random() * 30, Math.random() * 20 - 10, Math.random() * 20 - 10);
+    
+    for (let extraIdx = numNodes - 2; extraIdx < numNodes; extraIdx++) {
+        const extraNode = nodes[extraIdx];
+        const distances = [];
+        for (let j = 0; j < nodes.length; j++) {
+            if (j !== extraIdx) {
+                const otherNode = nodes[j];
+                const distance = extraNode.position.distanceTo(otherNode.position);
+                distances.push({ index: j, distance: distance });
+            }
         }
-        createEdge(scene, edges, [nodes[nodeAIndex], nodes[nodeBIndex]]);
+        distances.sort((a, b) => a.distance - b.distance);
+        for (let k = 0; k < Math.min(randomEdges, distances.length); k++) {
+            createEdge(scene, edges, [extraNode, nodes[distances[k].index]]);
+        }
     }
 }

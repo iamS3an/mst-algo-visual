@@ -87,7 +87,7 @@ export function createScene(container) {
         },
         startAlgo: () => {
             toggleMode('startAlgo');
-            prim(nodes, edges, state);
+            prim(nodes, edges, state.algoSteps);
         },
         pauseAlgo: () => {
             toggleMode('pauseAlgo');
