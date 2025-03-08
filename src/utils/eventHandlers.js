@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { setSelected, resetSelected } from './utils';
 import { updateEdge, createEdge, deleteEdge } from '../scene/edges';
 import { deleteNode, chooseStart } from '../scene/nodes';
+import { prim } from './algo';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -61,8 +62,9 @@ export function onPointerMove(event, params) {
 }
 
 export function onPointerUp(params) {
-    const { controls, state} = params;
+    const { controls, state, nodes, edges} = params;
     if (state.modes.isPlaying || state.lastStep > 1) return;
     state.clickedNode = null;
     controls.enabled = true;
+    prim(nodes, edges, state.algoSteps);
 }

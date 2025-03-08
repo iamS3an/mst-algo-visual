@@ -1,4 +1,5 @@
 export function prim(nodes, edges, algoSteps) {
+    algoSteps.length = 0;
     const startNode = nodes.find((node) => node.userData && node.userData.start);
     if (!startNode) {
         return;
@@ -33,5 +34,4 @@ export function prim(nodes, edges, algoSteps) {
             algoSteps.push(nodeA);
         }
     }
-
 }

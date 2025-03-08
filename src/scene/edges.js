@@ -64,7 +64,9 @@ export function updateEdge(edge) {
     edge.geometry.dispose();
     edge.geometry = newEdge.geometry;
     edge.sprite.position.copy(newEdge.sprite.position);
+    edge.sprite.material.map.dispose();
     edge.sprite.material.map = newEdge.sprite.material.map;
+    edge.userData.weight = newEdge.userData.weight;
 }
 
 export function deleteEdge(scene, edges, selectedNodes) {

@@ -12,11 +12,19 @@ export function createScene(container) {
     const edges = [];
 
     createExample(scene, nodes, edges);
+    prim(nodes, edges, state.algoSteps);
+
+    const animate = () => {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    };
+    animate();
 
     const handleResize = () => onWindowResize({ camera, renderer });
     const handlePointerDown = (event) => onPointerDown(event, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges });
     const handlePointerMove = (event) => onPointerMove(event, { camera, pointer, raycaster, plane, offset, state, edges });
-    const handlePointerUp = () => onPointerUp({ controls, state });
+    const handlePointerUp = () => onPointerUp({ controls, state, nodes, edges });
 
     const eventListeners = [
         { type: 'resize', handler: handleResize, options: false },
@@ -49,13 +57,6 @@ export function createScene(container) {
         });
         edges.length = 0;
     };
-
-    const animate = () => {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-    };
-    animate();
 
     const toggleMode = (modeName) => {
         const newModeValue = !state.modes[modeName];
@@ -106,7 +107,6 @@ export function createScene(container) {
             toggleMode('selectStart');
         },
         playAlgo: () => {
-            prim(nodes, edges, state.algoSteps);
             toggleMode(null);
             state.modes.isPlaying = !state.modes.isPlaying;
             executeAlgo(state);
