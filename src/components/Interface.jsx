@@ -21,11 +21,13 @@ function Interface() {
 
     const handleReload = () => {
         setActiveMode(null);
+        setIsPlaying(false);
         managerRef.current?.reload();
     };
 
     const handleClearScene = () => {
         setActiveMode(null);
+        setIsPlaying(false);
         managerRef.current?.clearScene();
     };
 

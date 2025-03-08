@@ -15,20 +15,26 @@
     height: 20px;
     border-radius: 50%;
     background-color: transparent;
-    color: #007BFF;
-    border: 2px solid #007BFF;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 15px;
     margin-bottom: 1px;
-    transition: color 0.3s ease, border-color 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.play-button:hover {
+    color: #e0e0e0;
+    border-color: #e0e0e0;
+    opacity: 0.8;
 }
 
 .play-button.playing {
-    color: #FF5722;
-    border-color: #FF5722;
+    color: #FFFFFF;
+    border-color: #FFFFFF;
 }
 
 .slider-container {
