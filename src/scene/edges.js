@@ -25,9 +25,9 @@ const createWeightTexture = (weight) => {
 export function defineEdge(nodeA, nodeB) {
     const weight = Math.round(nodeA.position.distanceTo(nodeB.position) / 5);
     const path = new THREE.CatmullRomCurve3([nodeA.position, nodeB.position]);
-    const geometry = new THREE.TubeGeometry(path, 20, 0.3, 8, false);
+    const geometry = new THREE.TubeGeometry(path, 20, 0.4, 8, false);
     const material = new THREE.MeshBasicMaterial({
-        color: '#7B7B7B',
+        color: '#3B3B3B',
         transparent: true,
         opacity: 0.8,
     });

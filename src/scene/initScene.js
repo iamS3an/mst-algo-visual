@@ -30,11 +30,10 @@ export function initScene(container) {
             addEdge: false,
             removeEdge: false,
             selectStart: false,
-            startAlgo: false,
-            pauseAlgo: false,
+            isPlaying: false,
         },
         clickedNode: null,
-        stepIndex: 0,
+        lastStep: 1,
         selectedNodes: [],
         algoSteps: [],
     };

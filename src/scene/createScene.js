@@ -1,6 +1,6 @@
 import { initScene } from './initScene';
 import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/eventHandlers';
-import { createExample } from '../utils/utils';
+import { createExample, visualizeMST } from '../utils/utils';
 import { createNode } from './nodes';
 import { prim } from '../utils/algo';
 
@@ -16,7 +16,7 @@ export function createScene(container) {
     const handleResize = () => onWindowResize({ camera, renderer });
     const handlePointerDown = (event) => onPointerDown(event, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges });
     const handlePointerMove = (event) => onPointerMove(event, { camera, pointer, raycaster, plane, offset, state, edges });
-    const handlePointerUp = () => onPointerUp({ controls, state });
+    const handlePointerUp = () => onPointerUp({ controls, state, nodes, edges });
 
     const eventListeners = [
         { type: 'resize', handler: handleResize, options: false },
@@ -32,25 +32,13 @@ export function createScene(container) {
     };
     bindEventListeners();
 
-    const animate = () => {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-    };
-    animate();
-
-    const unbindEventListeners = () => eventListeners.forEach((evt) => window.removeEventListener(evt.type, evt.handler, evt.options));
-
-    const toggleMode = (modeName) => {
-        const newModeValue = !state.modes[modeName];
-        Object.keys(state.modes).forEach((key) => {
-            state.modes[key] = key === modeName ? newModeValue : false;
+    const unbindEventListeners = () => {
+        eventListeners.forEach((evt) => {
+            window.removeEventListener(evt.type, evt.handler, evt.options);
         });
-        state.selectedNodes.forEach((node) => node.material.color.copy(node.userData.originalColor));
-        state.selectedNodes.length = 0;
     };
 
-    const clearElement = () => {
+    const clearElements = () => {
         toggleMode(null);
         nodes.forEach((node) => scene.remove(node));
         nodes.length = 0;
@@ -61,13 +49,46 @@ export function createScene(container) {
         edges.length = 0;
     };
 
+    const animate = () => {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    };
+    animate();
+
+    const toggleMode = (modeName) => {
+        const newModeValue = !state.modes[modeName];
+        Object.keys(state.modes).forEach((key) => {
+            state.modes[key] = key === modeName ? newModeValue : false;
+        });
+        state.selectedNodes.forEach((node) => node.material.color.copy(node.userData.originalColor));
+        state.selectedNodes.length = 0;
+    };
+
+    prim(nodes, edges, state.algoSteps);
+
+    const sleep = (ms) => {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    };
+
+    const playAlgo = async () => {
+        while (state.lastStep <= state.algoSteps.length) {
+            await sleep(1000);
+            if (!state.modes.isPlaying) {
+                break;
+            }
+            visualizeMST(state.lastStep, state.algoSteps);
+            state.lastStep++;
+        }
+    }
+
     return {
         reload: () => {
-            clearElement();
+            clearElements();
             createExample(scene, nodes, edges);
         },
         clearScene: () => {
-            clearElement();
+            clearElements();
         },
         addNode: () => {
             toggleMode(null);
@@ -86,13 +107,15 @@ export function createScene(container) {
             toggleMode('selectStart');
         },
         startAlgo: () => {
-            toggleMode('startAlgo');
-            prim(nodes, edges, state.algoSteps);
+            toggleMode(null);
+            state.modes.isPlaying = !state.modes.isPlaying;
+            playAlgo(state);
         },
         pauseAlgo: () => {
-            toggleMode('pauseAlgo');
+            state.modes.isPlaying = !state.modes.isPlaying;
         },
         cleanup: () => {
+            clearElements();
             unbindEventListeners();
         },
     };

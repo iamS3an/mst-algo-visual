@@ -106,14 +106,14 @@ function Interface() {
             text: 'Add Edge',
             onClick: handleAddEdge,
             position: { top: '80px', left: '20px' },
-            colors: { default: '#7B7B7B', hover: '#666666' }
+            colors: { default: '#3B3B3B', hover: '#363636' }
         },
         {
             id: 'removeEdge',
             text: 'Remove Edge',
             onClick: handleRemoveEdge,
             position: { top: '80px', left: '150px' },
-            colors: { default: '#7B7B7B', hover: '#666666' }
+            colors: { default: '#3B3B3B', hover: '#363636' }
         },
         {
             id: 'selectStart',

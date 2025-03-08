@@ -1,17 +1,11 @@
-const sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export async function prim(nodes, edges, algoSteps) {
+export function prim(nodes, edges, algoSteps) {
     const startNode = nodes.find((node) => node.userData && node.userData.start);
     if (!startNode) {
         return;
     }
     const visited = new Set();
     visited.add(startNode);
-    startNode.material.color.set('#007BFF');
-	algoSteps.push(startNode);
-    await sleep(1000);
+    algoSteps.push(startNode);
 
     while (visited.size < nodes.length) {
         const candidateEdges = edges.filter((edge) => {
@@ -28,19 +22,15 @@ export async function prim(nodes, edges, algoSteps) {
         });
 
         const chosenEdge = candidateEdges[0];
-        chosenEdge.material.color.set('#FFFFFF');
         algoSteps.push(chosenEdge);
 
         const { nodeA, nodeB } = chosenEdge.userData;
         if (visited.has(nodeA) && !visited.has(nodeB)) {
             visited.add(nodeB);
-            nodeB.material.color.set('#007BFF');
-			algoSteps.push(nodeB);
+            algoSteps.push(nodeB);
         } else if (visited.has(nodeB) && !visited.has(nodeA)) {
             visited.add(nodeA);
-            nodeA.material.color.set('#007BFF');
-			algoSteps.push(nodeA);
+            algoSteps.push(nodeA);
         }
-        await sleep(1000);
     }
 }
