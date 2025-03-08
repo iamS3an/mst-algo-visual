@@ -1,25 +1,51 @@
-import React, { useState } from 'react';
-import '../styles/ControlButton.css';
+import React from 'react';
 
-const ControlButton = ({ config }) => {
-    const [isHovered, setIsHovered] = useState(false);
+function ControlButton({ config }) {
+    const { text, onClick, position, colors, disabled } = config;
     
     const buttonStyle = {
-        ...config.position,
-        backgroundColor: isHovered ? config.colors.hover : config.colors.default
+        ...position,
+        backgroundColor: colors.default,
+        position: 'absolute',
+        padding: '10px 15px',
+        border: 'none',
+        borderRadius: '5px',
+        color: 'white',
+        fontSize: '16px',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        transition: 'background-color 0.3s',
+        opacity: disabled ? 0.5 : 1,
     };
     
+    const handleClick = (e) => {
+        if (!disabled) {
+            onClick(e);
+        }
+    };
+    
+    const handleMouseOver = (e) => {
+        if (!disabled) {
+            e.target.style.backgroundColor = colors.hover;
+        }
+    };
+    
+    const handleMouseOut = (e) => {
+        if (!disabled) {
+            e.target.style.backgroundColor = colors.default;
+        }
+    };
+
     return (
         <button
-            onClick={config.onClick}
-            className="control-button"
             style={buttonStyle}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onClick={handleClick}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            disabled={disabled}
         >
-            {config.text}
+            {text}
         </button>
     );
-};
+}
 
 export default ControlButton;

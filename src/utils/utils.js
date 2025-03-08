@@ -20,11 +20,9 @@ export function visualizeMST(targetStep, algoSteps) {
 };
 
 export function setSelected(node, selectedNodes) {
-    if (!node.userData.originalColor) {
-        node.userData.originalColor = node.material.color.clone();
-    }
     if (!selectedNodes.includes(node)) {
         selectedNodes.push(node);
+        node.userData.originalColor = node.material.color.clone();
         node.material.color.set('#F3FF9A');
     } else {
         selectedNodes.splice(selectedNodes.indexOf(node), 1);

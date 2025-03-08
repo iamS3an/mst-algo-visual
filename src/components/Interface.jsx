@@ -60,7 +60,7 @@ function Interface() {
         setActiveMode(null);
         setIsPlaying(prev => !prev);
         if (!isPlaying) {
-            managerRef.current?.startAlgo();
+            managerRef.current?.playAlgo();
         } else {
             managerRef.current?.pauseAlgo();
         }
@@ -78,49 +78,56 @@ function Interface() {
             text: 'Example',
             onClick: handleReload,
             position: { bottom: '20px', right: '20px' },
-            colors: { default: '#007BFF', hover: '#0056b3' }
+            colors: { default: '#007BFF', hover: '#0056b3' },
+            disabled: isPlaying || sliderValue !== 0
         },
         {
             id: 'clear',
             text: 'Clear',
             onClick: handleClearScene,
             position: { bottom: '20px', left: '20px' },
-            colors: { default: '#FFA000', hover: '#FF8000' }
+            colors: { default: '#FFA000', hover: '#FF8000' },
+            disabled: isPlaying || sliderValue !== 0
         },
         {
             id: 'addNode',
             text: 'Add Node',
             onClick: handleAddNode,
             position: { top: '20px', left: '20px' },
-            colors: { default: '#02C874', hover: '#02A05D' }
+            colors: { default: '#02C874', hover: '#02A05D' },
+            disabled: isPlaying || sliderValue !== 0
         },
         {
             id: 'removeNode',
             text: 'Remove Node',
             onClick: handleRemoveNode,
             position: { top: '20px', left: '150px' },
-            colors: { default: '#02C874', hover: '#02A05D' }
+            colors: { default: '#02C874', hover: '#02A05D' },
+            disabled: isPlaying || sliderValue !== 0
         },
         {
             id: 'addEdge',
             text: 'Add Edge',
             onClick: handleAddEdge,
             position: { top: '80px', left: '20px' },
-            colors: { default: '#3B3B3B', hover: '#363636' }
+            colors: { default: '#3B3B3B', hover: '#363636' },
+            disabled: isPlaying || sliderValue !== 0
         },
         {
             id: 'removeEdge',
             text: 'Remove Edge',
             onClick: handleRemoveEdge,
             position: { top: '80px', left: '150px' },
-            colors: { default: '#3B3B3B', hover: '#363636' }
+            colors: { default: '#3B3B3B', hover: '#363636' },
+            disabled: isPlaying || sliderValue !== 0
         },
         {
             id: 'selectStart',
             text: 'Select Start Point',
             onClick: handleSelectStart,
             position: { top: '140px', left: '20px' },
-            colors: { default: '#FF0000', hover: '#CC0000' }
+            colors: { default: '#FF0000', hover: '#CC0000' },
+            disabled: isPlaying || sliderValue !== 0
         }
     ];
 

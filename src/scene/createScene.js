@@ -16,7 +16,7 @@ export function createScene(container) {
     const handleResize = () => onWindowResize({ camera, renderer });
     const handlePointerDown = (event) => onPointerDown(event, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges });
     const handlePointerMove = (event) => onPointerMove(event, { camera, pointer, raycaster, plane, offset, state, edges });
-    const handlePointerUp = () => onPointerUp({ controls, state, nodes, edges });
+    const handlePointerUp = () => onPointerUp({ controls, state });
 
     const eventListeners = [
         { type: 'resize', handler: handleResize, options: false },
@@ -40,6 +40,7 @@ export function createScene(container) {
 
     const clearElements = () => {
         toggleMode(null);
+        state.lastStep = 1;
         nodes.forEach((node) => scene.remove(node));
         nodes.length = 0;
         edges.forEach((edge) => {
@@ -65,17 +66,15 @@ export function createScene(container) {
         state.selectedNodes.length = 0;
     };
 
-    prim(nodes, edges, state.algoSteps);
-
     const sleep = (ms) => {
         return new Promise((resolve) => setTimeout(resolve, ms));
     };
 
-    const playAlgo = async () => {
+    const executeAlgo = async () => {
         while (state.lastStep <= state.algoSteps.length) {
             await sleep(1000);
             if (!state.modes.isPlaying) {
-                break;
+                return;
             }
             visualizeMST(state.lastStep, state.algoSteps);
             state.lastStep++;
@@ -106,13 +105,20 @@ export function createScene(container) {
         selectStart: () => {
             toggleMode('selectStart');
         },
-        startAlgo: () => {
+        playAlgo: () => {
+            prim(nodes, edges, state.algoSteps);
             toggleMode(null);
             state.modes.isPlaying = !state.modes.isPlaying;
-            playAlgo(state);
+            executeAlgo(state);
         },
         pauseAlgo: () => {
             state.modes.isPlaying = !state.modes.isPlaying;
+            if (state.lastStep >= state.algoSteps.length) {
+                state.algoSteps.forEach((obj) => {
+                    obj.material.color.copy(obj.userData.originalColor);
+                });
+                state.lastStep = 1;
+            }
         },
         cleanup: () => {
             clearElements();

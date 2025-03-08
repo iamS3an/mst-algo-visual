@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { setSelected, resetSelected } from './utils';
 import { updateEdge, createEdge, deleteEdge } from '../scene/edges';
 import { deleteNode, chooseStart } from '../scene/nodes';
-import { prim } from '../utils/algo';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -18,6 +17,7 @@ export function onWindowResize({ camera, renderer }) {
 
 export function onPointerDown(event, params) {
     const { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges } = params;
+    if (state.modes.isPlaying || state.lastStep > 1) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
@@ -46,7 +46,7 @@ export function onPointerDown(event, params) {
 
 export function onPointerMove(event, params) {
     const { camera, pointer, raycaster, plane, offset, state, edges } = params;
-    if (!state.clickedNode) return;
+    if (!state.clickedNode || state.modes.isPlaying || state.lastStep > 1) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersection = new THREE.Vector3();
     if (raycaster.ray.intersectPlane(plane, intersection)) {
@@ -61,9 +61,8 @@ export function onPointerMove(event, params) {
 }
 
 export function onPointerUp(params) {
-    const { controls, state, nodes, edges } = params;
+    const { controls, state} = params;
+    if (state.modes.isPlaying || state.lastStep > 1) return;
     state.clickedNode = null;
     controls.enabled = true;
-    state.algoSteps.length = 0;
-    prim(nodes, edges, state.algoSteps);
 }

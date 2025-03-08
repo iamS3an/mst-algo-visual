@@ -33,4 +33,5 @@ export function prim(nodes, edges, algoSteps) {
             algoSteps.push(nodeA);
         }
     }
+
 }
