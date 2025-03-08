@@ -15,8 +15,8 @@
     height: 20px;
     border-radius: 50%;
     background-color: transparent;
-    color: #4CAF50;
-    border: 2px solid #4CAF50;
+    color: #007BFF;
+    border: 2px solid #007BFF;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -53,9 +53,9 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #4CAF50;
+    background: #007BFF;
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
     transition: all 0.2s ease;
 }
 
@@ -63,9 +63,9 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #4CAF50;
+    background: #007BFF;
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
     transition: all 0.2s ease;
 }
 

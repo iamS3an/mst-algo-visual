@@ -58,7 +58,7 @@ function Interface() {
         setActiveMode(null);
         setIsPlaying(prev => !prev);
         if (!isPlaying) {
-            managerRef.current?.startAlgo(sliderValue);
+            managerRef.current?.startAlgo();
         } else {
             managerRef.current?.pauseAlgo();
         }
