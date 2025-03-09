@@ -15,7 +15,7 @@ function Interface() {
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
 
-        managerRef.current.setUpdateSlider((currentStep, totalSteps) => {
+        managerRef.current.updateSlider((currentStep, totalSteps) => {
             setSliderValue(currentStep);
             setMaxSliderValue(totalSteps);
         });
@@ -24,7 +24,7 @@ function Interface() {
     }, []);
 
     useEffect(() => {
-        if (sliderValue === maxSliderValue || sliderValue === 0) {
+        if (sliderValue === maxSliderValue) {
             setIsPlaying(false);
         }
     }, [sliderValue, maxSliderValue]);
@@ -36,21 +36,12 @@ function Interface() {
 
     const handleReload = useCallback(() => {
         setActiveMode(null);
-        setIsPlaying(false);
         managerRef.current?.reload();
     }, []);
 
     const handleClearScene = useCallback(() => {
         setActiveMode(null);
-        setIsPlaying(false);
         managerRef.current?.clearScene();
-    }, []);
-
-    const handleReset = useCallback(() => {
-        setActiveMode(null);
-        setIsPlaying(false);
-        setSliderValue(0);
-        managerRef.current?.setStep(0);
     }, []);
 
     const handlePlayPause = useCallback(() => {
@@ -59,11 +50,19 @@ function Interface() {
         isPlaying ? managerRef.current?.pauseAlgo() : managerRef.current?.playAlgo();
     }, [isPlaying]);
 
+    const handleReset = useCallback(() => {
+        setActiveMode(null);
+        setIsPlaying(false);
+        setSliderValue(0);
+        managerRef.current?.pauseAlgo();
+        managerRef.current?.useSlider(0);
+    }, []);
+
     const handleSlider = useCallback((e) => {
         setActiveMode(null);
         const newValue = parseInt(e.target.value, 10);
         setSliderValue(newValue);
-        managerRef.current?.setStep(newValue);
+        managerRef.current?.useSlider(newValue);
     }, []);
 
     const buttonConfigs = [

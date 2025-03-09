@@ -36,13 +36,21 @@ export function deleteNode(scene, nodes, edges, clickedNode) {
 }
 
 export function chooseStart(nodes, clickedNode) {
+    if (clickedNode.userData.start) {
+        clickedNode.userData.start = false;
+        clickedNode.material.color.set('#02C874');
+        clickedNode.userData.originalColor = clickedNode.material.color.clone();
+        return;
+    }
     for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].userData.start) {
             nodes[i].userData.start = false;
             nodes[i].material.color.set('#02C874');
+            nodes[i].userData.originalColor = nodes[i].material.color.clone();
             break;
         }
     }
     clickedNode.userData.start = true;
     clickedNode.material.color.set('#FF0000');
+    clickedNode.userData.originalColor = clickedNode.material.color.clone();
 }

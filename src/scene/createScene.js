@@ -31,8 +31,8 @@ export function createScene(container) {
     const handleResize = () => onWindowResize({ camera, renderer });
 
     const handlePointerEvents = {
-        pointerdown: (e) => onPointerDown(e, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges }),
-        pointermove: (e) => onPointerMove(e, { camera, pointer, raycaster, plane, offset, state, nodes, edges }),
+        pointerdown: (e) => onPointerDown(e, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback }),
+        pointermove: (e) => onPointerMove(e, { camera, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback }),
         pointerup: () => onPointerUp({ controls, state }),
     };
 
@@ -47,6 +47,15 @@ export function createScene(container) {
         eventListeners.forEach(([type, handler]) => window[add ? 'addEventListener' : 'removeEventListener'](type, handler));
     };
     updateEventListeners();
+
+    const toggleMode = (mode) => {
+        Object.keys(state.modes).forEach((key) => {
+            state.modes[key] = key === mode ? !state.modes[key] : false;
+        });
+
+        state.selectedNodes.forEach((node) => node.material.color.copy(node.userData.originalColor));
+        state.selectedNodes.length = 0;
+    };
 
     const clearElements = () => {
         toggleMode(null);
@@ -65,21 +74,12 @@ export function createScene(container) {
         if (sliderCallback) sliderCallback(0, 0);
     };
 
-    const toggleMode = (mode) => {
-        Object.keys(state.modes).forEach((key) => {
-            state.modes[key] = key === mode ? !state.modes[key] : false;
-        });
-
-        state.selectedNodes.forEach((node) => node.material.color.copy(node.userData.originalColor));
-        state.selectedNodes.length = 0;
-    };
-
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const executeAlgo = async () => {
         while (state.lastStep < state.algoSteps.length) {
             await sleep(1000);
-            if (!state.modes.isPlaying) {
+            if (!state.isPlaying) {
                 return;
             }
             state.lastStep++;
@@ -89,11 +89,11 @@ export function createScene(container) {
     };
 
     const uiController = {
+        clearScene: clearElements,
         reload: () => {
             clearElements();
             setupExample();
         },
-        clearScene: clearElements,
         addNode: () => {
             toggleMode(null);
             createNode(scene, nodes);
@@ -103,28 +103,27 @@ export function createScene(container) {
         removeEdge: () => toggleMode('removeEdge'),
         selectStart: () => toggleMode('selectStart'),
         playAlgo: () => {
-            if (state.lastStep >= state.algoSteps.length) {
-                state.algoSteps.forEach((obj) => obj.material.color.copy(obj.userData.originalColor));
-                state.lastStep = 0;
-                if (sliderCallback) sliderCallback(0, state.algoSteps.length);
-            } else {
-                toggleMode(null);
-                state.modes.isPlaying = true;
-                executeAlgo();
+            toggleMode(null);
+            if (state.algoSteps.length > 0) {
+                if (state.lastStep < state.algoSteps.length) {
+                    state.isPlaying = true;
+                    executeAlgo();
+                } else {
+                    state.algoSteps.forEach((obj) => obj.material.color.copy(obj.userData.originalColor));
+                    state.lastStep = 0;
+                    if (sliderCallback) sliderCallback(0, state.algoSteps.length);
+                }
             }
         },
         pauseAlgo: () => {
-            state.modes.isPlaying = false;
+            state.isPlaying = false;
         },
-        setStep: (step) => {
+        useSlider: (step) => {
             toggleMode(null);
             visualizeMST(step, state.algoSteps);
             state.lastStep = step;
-            if (step === 0) {
-                state.modes.isPlaying = false;
-            }
         },
-        setUpdateSlider: (callback) => {
+        updateSlider: (callback) => {
             sliderCallback = callback;
             sliderCallback(state.lastStep, state.algoSteps.length);
         },

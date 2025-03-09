@@ -17,7 +17,7 @@ export function onWindowResize({ camera, renderer }) {
 }
 
 export function onPointerDown(event, params) {
-    const { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges } = params;
+    const { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback } = params;
     if (state.lastStep > 0) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
@@ -43,11 +43,12 @@ export function onPointerDown(event, params) {
             offset.copy(intersects[0].point).sub(state.clickedNode.position);
         }
         prim(nodes, edges, state.algoSteps);
+        if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
     }
 }
 
 export function onPointerMove(event, params) {
-    const { camera, pointer, raycaster, plane, offset, state, nodes, edges } = params;
+    const { camera, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback } = params;
     if (!state.clickedNode || state.lastStep > 0) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersection = new THREE.Vector3();
@@ -61,6 +62,7 @@ export function onPointerMove(event, params) {
         }
     }
     prim(nodes, edges, state.algoSteps);
+    if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
 }
 
 export function onPointerUp(params) {
