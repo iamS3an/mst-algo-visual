@@ -117,6 +117,7 @@ export function createScene(container) {
             state.modes.isPlaying = false;
         },
         setStep: (step) => {
+            toggleMode(null);
             visualizeMST(step, state.algoSteps);
             state.lastStep = step;
             if (step === 0) {

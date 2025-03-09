@@ -60,6 +60,7 @@ function Interface() {
     }, [isPlaying]);
 
     const handleSliderChange = useCallback((e) => {
+        setActiveMode(null);
         const newValue = parseInt(e.target.value, 10);
         setSliderValue(newValue);
         managerRef.current?.setStep(newValue);
