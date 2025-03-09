@@ -10,10 +10,14 @@ function Interface() {
     const [activeMode, setActiveMode] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
-    const [maxSliderValue, setMaxSliderValue] = useState(100);
+    const [maxSliderValue, setMaxSliderValue] = useState(0);
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
+        managerRef.current.setUpdateSlider((currentStep, totalSteps) => {
+            setSliderValue(currentStep);
+            setMaxSliderValue(totalSteps);
+        });
         return () => {
             managerRef.current.cleanup();
         };
@@ -79,7 +83,7 @@ function Interface() {
             onClick: handleReload,
             position: { bottom: '20px', right: '20px' },
             colors: { default: '#007BFF', hover: '#0056b3' },
-            disabled: isPlaying || sliderValue !== 0
+            disabled: sliderValue > 0
         },
         {
             id: 'clear',
@@ -87,7 +91,7 @@ function Interface() {
             onClick: handleClearScene,
             position: { bottom: '20px', left: '20px' },
             colors: { default: '#FFA000', hover: '#FF8000' },
-            disabled: isPlaying || sliderValue !== 0
+            disabled: sliderValue > 0
         },
         {
             id: 'addNode',
@@ -95,7 +99,7 @@ function Interface() {
             onClick: handleAddNode,
             position: { top: '20px', left: '20px' },
             colors: { default: '#02C874', hover: '#02A05D' },
-            disabled: isPlaying || sliderValue !== 0
+            disabled: sliderValue > 0
         },
         {
             id: 'removeNode',
@@ -103,7 +107,7 @@ function Interface() {
             onClick: handleRemoveNode,
             position: { top: '20px', left: '150px' },
             colors: { default: '#02C874', hover: '#02A05D' },
-            disabled: isPlaying || sliderValue !== 0
+            disabled: sliderValue > 0
         },
         {
             id: 'addEdge',
@@ -111,7 +115,7 @@ function Interface() {
             onClick: handleAddEdge,
             position: { top: '80px', left: '20px' },
             colors: { default: '#3B3B3B', hover: '#363636' },
-            disabled: isPlaying || sliderValue !== 0
+            disabled: sliderValue > 0
         },
         {
             id: 'removeEdge',
@@ -119,7 +123,7 @@ function Interface() {
             onClick: handleRemoveEdge,
             position: { top: '80px', left: '150px' },
             colors: { default: '#3B3B3B', hover: '#363636' },
-            disabled: isPlaying || sliderValue !== 0
+            disabled: sliderValue > 0
         },
         {
             id: 'selectStart',
@@ -127,7 +131,7 @@ function Interface() {
             onClick: handleSelectStart,
             position: { top: '140px', left: '20px' },
             colors: { default: '#FF0000', hover: '#CC0000' },
-            disabled: isPlaying || sliderValue !== 0
+            disabled: sliderValue > 0
         }
     ];
 

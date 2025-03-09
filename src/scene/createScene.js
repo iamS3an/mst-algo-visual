@@ -7,12 +7,14 @@ import { prim } from '../utils/algo';
 export function createScene(container) {
     if (container) container.innerHTML = '';
     const { scene, camera, renderer, controls, pointer, raycaster, plane, offset, state } = initScene(container);
+    let sliderCallback = null;
 
     const nodes = [];
     const edges = [];
 
     createExample(scene, nodes, edges);
     prim(nodes, edges, state.algoSteps);
+
 
     const animate = () => {
         requestAnimationFrame(animate);
@@ -23,8 +25,8 @@ export function createScene(container) {
 
     const handleResize = () => onWindowResize({ camera, renderer });
     const handlePointerDown = (event) => onPointerDown(event, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges });
-    const handlePointerMove = (event) => onPointerMove(event, { camera, pointer, raycaster, plane, offset, state, edges });
-    const handlePointerUp = () => onPointerUp({ controls, state, nodes, edges });
+    const handlePointerMove = (event) => onPointerMove(event, { camera, pointer, raycaster, plane, offset, state, nodes, edges });
+    const handlePointerUp = () => onPointerUp({ controls, state });
 
     const eventListeners = [
         { type: 'resize', handler: handleResize, options: false },
@@ -33,22 +35,19 @@ export function createScene(container) {
         { type: 'pointerup', handler: handlePointerUp, options: false },
     ];
 
-    const bindEventListeners = () => {
+    const updateEventListeners = (shouldAdd) => {
         eventListeners.forEach((evt) => {
-            window.addEventListener(evt.type, evt.handler, evt.options);
+            const method = shouldAdd ? 'addEventListener' : 'removeEventListener';
+            window[method](evt.type, evt.handler, evt.options);
         });
     };
-    bindEventListeners();
-
-    const unbindEventListeners = () => {
-        eventListeners.forEach((evt) => {
-            window.removeEventListener(evt.type, evt.handler, evt.options);
-        });
-    };
+    updateEventListeners(true);
 
     const clearElements = () => {
         toggleMode(null);
-        state.lastStep = 1;
+        state.lastStep = 0;
+        if (sliderCallback) sliderCallback(0, 0);
+        state.algoSteps.length = 0;
         nodes.forEach((node) => scene.remove(node));
         nodes.length = 0;
         edges.forEach((edge) => {
@@ -72,21 +71,23 @@ export function createScene(container) {
     };
 
     const executeAlgo = async () => {
-        state.lastStep = 1;
-        while (state.lastStep <= state.algoSteps.length) {
+        while (state.lastStep < state.algoSteps.length) {
             await sleep(1000);
             if (!state.modes.isPlaying) {
                 return;
             }
-            visualizeMST(state.lastStep, state.algoSteps);
             state.lastStep++;
+            visualizeMST(state.lastStep, state.algoSteps);
+            if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
         }
-    }
+    };
 
     return {
         reload: () => {
             clearElements();
             createExample(scene, nodes, edges);
+            prim(nodes, edges, state.algoSteps);
+            if (sliderCallback) sliderCallback(0, state.algoSteps.length);
         },
         clearScene: () => {
             clearElements();
@@ -119,11 +120,21 @@ export function createScene(container) {
                     obj.material.color.copy(obj.userData.originalColor);
                 });
                 state.lastStep = 0;
+                if (sliderCallback) sliderCallback(0, state.algoSteps.length);
             }
+        },
+        setAlgoProgress: (stepIndex) => {
+            visualizeMST(stepIndex, state.algoSteps);
+            state.lastStep = stepIndex;
+        },
+        setUpdateSlider: (callback) => {
+            sliderCallback = callback;
+            if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
         },
         cleanup: () => {
             clearElements();
-            unbindEventListeners();
+            updateEventListeners(false);
+            sliderCallback = null;
         },
     };
 }

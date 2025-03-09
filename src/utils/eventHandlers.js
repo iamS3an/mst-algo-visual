@@ -18,7 +18,7 @@ export function onWindowResize({ camera, renderer }) {
 
 export function onPointerDown(event, params) {
     const { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges } = params;
-    if (state.modes.isPlaying || state.lastStep > 1) return;
+    if (state.lastStep > 0) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
@@ -42,12 +42,13 @@ export function onPointerDown(event, params) {
             plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.clickedNode.position);
             offset.copy(intersects[0].point).sub(state.clickedNode.position);
         }
+        prim(nodes, edges, state.algoSteps);
     }
 }
 
 export function onPointerMove(event, params) {
-    const { camera, pointer, raycaster, plane, offset, state, edges } = params;
-    if (!state.clickedNode || state.modes.isPlaying || state.lastStep > 1) return;
+    const { camera, pointer, raycaster, plane, offset, state, nodes, edges } = params;
+    if (!state.clickedNode || state.lastStep > 0) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersection = new THREE.Vector3();
     if (raycaster.ray.intersectPlane(plane, intersection)) {
@@ -59,12 +60,12 @@ export function onPointerMove(event, params) {
             }
         }
     }
+    prim(nodes, edges, state.algoSteps);
 }
 
 export function onPointerUp(params) {
-    const { controls, state, nodes, edges} = params;
-    if (state.modes.isPlaying || state.lastStep > 1) return;
+    const { controls, state } = params;
+    if (state.lastStep > 0) return;
     state.clickedNode = null;
     controls.enabled = true;
-    prim(nodes, edges, state.algoSteps);
 }
