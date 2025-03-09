@@ -77,8 +77,11 @@ export function createScene(container) {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const executeAlgo = async () => {
-        while (state.lastStep < state.algoSteps.length && state.modes.isPlaying) {
+        while (state.lastStep < state.algoSteps.length) {
             await sleep(1000);
+            if (!state.modes.isPlaying) {
+                return;
+            }
             state.lastStep++;
             visualizeMST(state.lastStep, state.algoSteps);
             if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
@@ -100,21 +103,25 @@ export function createScene(container) {
         removeEdge: () => toggleMode('removeEdge'),
         selectStart: () => toggleMode('selectStart'),
         playAlgo: () => {
-            toggleMode(null);
-            state.modes.isPlaying = true;
-            executeAlgo();
-        },
-        pauseAlgo: () => {
-            state.modes.isPlaying = false;
             if (state.lastStep >= state.algoSteps.length) {
                 state.algoSteps.forEach((obj) => obj.material.color.copy(obj.userData.originalColor));
                 state.lastStep = 0;
                 if (sliderCallback) sliderCallback(0, state.algoSteps.length);
+            } else {
+                toggleMode(null);
+                state.modes.isPlaying = true;
+                executeAlgo();
             }
         },
-        setAlgoProgress: (step) => {
+        pauseAlgo: () => {
+            state.modes.isPlaying = false;
+        },
+        setStep: (step) => {
             visualizeMST(step, state.algoSteps);
             state.lastStep = step;
+            if (step === 0) {
+                state.modes.isPlaying = false;
+            }
         },
         setUpdateSlider: (callback) => {
             sliderCallback = callback;

@@ -14,18 +14,20 @@ function Interface() {
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
-
+        
         managerRef.current.setUpdateSlider((currentStep, totalSteps) => {
             setSliderValue(currentStep);
             setMaxSliderValue(totalSteps);
         });
 
-        managerRef.current.setPlaybackStatus = (isComplete) => {
-            if (isComplete) setIsPlaying(false);
-        };
-
         return () => managerRef.current.cleanup();
     }, []);
+
+    useEffect(() => {
+        if (sliderValue === maxSliderValue || sliderValue === 0) {
+            setIsPlaying(false);
+        }
+    }, [sliderValue, maxSliderValue]);
 
     const toggleMode = useCallback((mode, action) => {
         setActiveMode((prev) => (prev === mode ? null : mode));
@@ -53,7 +55,7 @@ function Interface() {
     const handleSliderChange = useCallback((e) => {
         const newValue = parseInt(e.target.value, 10);
         setSliderValue(newValue);
-        managerRef.current?.setAlgoProgress(newValue);
+        managerRef.current?.setStep(newValue);
     }, []);
 
     const buttonConfigs = [
