@@ -4,7 +4,6 @@
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    flex-direction: column;
     align-items: center;
     background-color: transparent;
 }
@@ -22,19 +21,14 @@
     justify-content: center;
     align-items: center;
     font-size: 15px;
-    margin-bottom: 1px;
     transition: all 0.3s ease;
+    margin-right: 10px;
 }
 
 .play-button:hover {
     color: #e0e0e0;
     border-color: #e0e0e0;
     opacity: 0.8;
-}
-
-.play-button.playing {
-    color: #FFFFFF;
-    border-color: #FFFFFF;
 }
 
 .slider-container {

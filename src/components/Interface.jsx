@@ -46,6 +46,13 @@ function Interface() {
         managerRef.current?.clearScene();
     }, []);
 
+    const handleReset = useCallback(() => {
+        setActiveMode(null);
+        setIsPlaying(false);
+        setSliderValue(0);
+        managerRef.current?.setStep(0);
+    }, []);
+
     const handlePlayPause = useCallback(() => {
         setActiveMode(null);
         setIsPlaying((prev) => !prev);
@@ -84,7 +91,14 @@ function Interface() {
 
             {activeMode && modeMessages[activeMode] && <div className="tip-message">{modeMessages[activeMode]}</div>}
 
-            <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleSliderChange={handleSliderChange} />
+            <PlaybackControls 
+                isPlaying={isPlaying} 
+                sliderValue={sliderValue} 
+                maxSliderValue={maxSliderValue} 
+                handlePlayPause={handlePlayPause} 
+                handleReset={handleReset} 
+                handleSliderChange={handleSliderChange} 
+            />
 
             {buttonConfigs.map(({ id, text, action, position, colors }) => (
                 <ControlButton

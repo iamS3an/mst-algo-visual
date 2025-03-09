@@ -1,14 +1,20 @@
 import React from 'react';
 import '../styles/PlaybackControls.css';
 
-const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPause, handleSliderChange }) => {
+const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPause, handleReset, handleSliderChange }) => {
     return (
         <div className="controls-container">
             <button
                 onClick={handlePlayPause}
-                className={`play-button ${isPlaying ? 'playing' : ''}`}
+                className='play-button'
             >
                 {isPlaying ? '⏸' : '▶'}
+            </button>
+            <button
+                onClick={handleReset}
+                className='play-button'
+            >
+                ⏹
             </button>
             <div className="slider-container">
                 <span className="time-display">{sliderValue}</span>
