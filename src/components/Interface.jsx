@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { createScene } from '../scene/createScene';
 import ControlButton from './ControlButton';
 import PlaybackControls from './PlaybackControls';
@@ -14,125 +14,56 @@ function Interface() {
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
+
         managerRef.current.setUpdateSlider((currentStep, totalSteps) => {
             setSliderValue(currentStep);
             setMaxSliderValue(totalSteps);
         });
-        return () => {
-            managerRef.current.cleanup();
+
+        managerRef.current.setPlaybackStatus = (isComplete) => {
+            if (isComplete) setIsPlaying(false);
         };
+
+        return () => managerRef.current.cleanup();
     }, []);
 
-    const handleReload = () => {
+    const toggleMode = useCallback((mode, action) => {
+        setActiveMode((prev) => (prev === mode ? null : mode));
+        managerRef.current?.[action]?.();
+    }, []);
+
+    const handleReload = useCallback(() => {
         setActiveMode(null);
         setIsPlaying(false);
         managerRef.current?.reload();
-    };
+    }, []);
 
-    const handleClearScene = () => {
+    const handleClearScene = useCallback(() => {
         setActiveMode(null);
         setIsPlaying(false);
         managerRef.current?.clearScene();
-    };
+    }, []);
 
-    const handleAddNode = () => {
+    const handlePlayPause = useCallback(() => {
         setActiveMode(null);
-        managerRef.current?.addNode();
-    };
+        setIsPlaying((prev) => !prev);
+        isPlaying ? managerRef.current?.pauseAlgo() : managerRef.current?.playAlgo();
+    }, [isPlaying]);
 
-    const handleRemoveNode = () => {
-        setActiveMode((prev) => (prev === 'removeNode' ? null : 'removeNode'));
-        managerRef.current?.removeNode();
-    };
-
-    const handleAddEdge = () => {
-        setActiveMode((prev) => (prev === 'addEdge' ? null : 'addEdge'));
-        managerRef.current?.addEdge();
-    };
-
-    const handleRemoveEdge = () => {
-        setActiveMode((prev) => (prev === 'removeEdge' ? null : 'removeEdge'));
-        managerRef.current?.removeEdge();
-    };
-
-    const handleSelectStart = () => {
-        setActiveMode((prev) => (prev === 'selectStart' ? null : 'selectStart'));
-        managerRef.current?.selectStart();
-    };
-
-    const handlePlayPause = () => {
-        setActiveMode(null);
-        setIsPlaying(prev => !prev);
-        if (!isPlaying) {
-            managerRef.current?.playAlgo();
-        } else {
-            managerRef.current?.pauseAlgo();
-        }
-    };
-
-    const handleSliderChange = (e) => {
-        const newValue = parseInt(e.target.value);
+    const handleSliderChange = useCallback((e) => {
+        const newValue = parseInt(e.target.value, 10);
         setSliderValue(newValue);
         managerRef.current?.setAlgoProgress(newValue);
-    };
+    }, []);
 
     const buttonConfigs = [
-        {
-            id: 'example',
-            text: 'Example',
-            onClick: handleReload,
-            position: { bottom: '20px', right: '20px' },
-            colors: { default: '#007BFF', hover: '#0056b3' },
-            disabled: sliderValue > 0
-        },
-        {
-            id: 'clear',
-            text: 'Clear',
-            onClick: handleClearScene,
-            position: { bottom: '20px', left: '20px' },
-            colors: { default: '#FFA000', hover: '#FF8000' },
-            disabled: sliderValue > 0
-        },
-        {
-            id: 'addNode',
-            text: 'Add Node',
-            onClick: handleAddNode,
-            position: { top: '20px', left: '20px' },
-            colors: { default: '#02C874', hover: '#02A05D' },
-            disabled: sliderValue > 0
-        },
-        {
-            id: 'removeNode',
-            text: 'Remove Node',
-            onClick: handleRemoveNode,
-            position: { top: '20px', left: '150px' },
-            colors: { default: '#02C874', hover: '#02A05D' },
-            disabled: sliderValue > 0
-        },
-        {
-            id: 'addEdge',
-            text: 'Add Edge',
-            onClick: handleAddEdge,
-            position: { top: '80px', left: '20px' },
-            colors: { default: '#3B3B3B', hover: '#363636' },
-            disabled: sliderValue > 0
-        },
-        {
-            id: 'removeEdge',
-            text: 'Remove Edge',
-            onClick: handleRemoveEdge,
-            position: { top: '80px', left: '150px' },
-            colors: { default: '#3B3B3B', hover: '#363636' },
-            disabled: sliderValue > 0
-        },
-        {
-            id: 'selectStart',
-            text: 'Select Start Point',
-            onClick: handleSelectStart,
-            position: { top: '140px', left: '20px' },
-            colors: { default: '#FF0000', hover: '#CC0000' },
-            disabled: sliderValue > 0
-        }
+        { id: 'example', text: 'Example', action: handleReload, position: { bottom: '20px', right: '20px' }, colors: { default: '#007BFF', hover: '#0056b3' } },
+        { id: 'clear', text: 'Clear', action: handleClearScene, position: { bottom: '20px', left: '20px' }, colors: { default: '#FFA000', hover: '#FF8000' } },
+        { id: 'addNode', text: 'Add Node', action: () => toggleMode(null, 'addNode'), position: { top: '20px', left: '20px' }, colors: { default: '#02C874', hover: '#02A05D' } },
+        { id: 'removeNode', text: 'Remove Node', action: () => toggleMode('removeNode', 'removeNode'), position: { top: '20px', left: '150px' }, colors: { default: '#02C874', hover: '#02A05D' } },
+        { id: 'addEdge', text: 'Add Edge', action: () => toggleMode('addEdge', 'addEdge'), position: { top: '80px', left: '20px' }, colors: { default: '#3B3B3B', hover: '#363636' } },
+        { id: 'removeEdge', text: 'Remove Edge', action: () => toggleMode('removeEdge', 'removeEdge'), position: { top: '80px', left: '150px' }, colors: { default: '#3B3B3B', hover: '#363636' } },
+        { id: 'selectStart', text: 'Select Start Point', action: () => toggleMode('selectStart', 'selectStart'), position: { top: '140px', left: '20px' }, colors: { default: '#FF0000', hover: '#CC0000' } },
     ];
 
     const modeMessages = {
@@ -143,21 +74,28 @@ function Interface() {
         selectStart: 'Select a start node',
     };
 
+    const buttonsDisabled = sliderValue > 0;
+
     return (
         <div className="interface-container">
             <div ref={containerRef}></div>
-            {activeMode in modeMessages && <div className="tip-message">{modeMessages[activeMode]}</div>}
-            
-            <PlaybackControls 
-                isPlaying={isPlaying} 
-                sliderValue={sliderValue} 
-                maxSliderValue={maxSliderValue} 
-                handlePlayPause={handlePlayPause} 
-                handleSliderChange={handleSliderChange} 
-            />
 
-            {buttonConfigs.map(config => (
-                <ControlButton key={config.id} config={config} />
+            {activeMode && modeMessages[activeMode] && <div className="tip-message">{modeMessages[activeMode]}</div>}
+
+            <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleSliderChange={handleSliderChange} />
+
+            {buttonConfigs.map(({ id, text, action, position, colors }) => (
+                <ControlButton
+                    key={id}
+                    config={{
+                        id,
+                        text,
+                        onClick: action,
+                        position,
+                        colors,
+                        disabled: buttonsDisabled,
+                    }}
+                />
             ))}
         </div>
     );
