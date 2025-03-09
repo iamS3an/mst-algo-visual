@@ -14,7 +14,7 @@ function Interface() {
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
-        
+
         managerRef.current.setUpdateSlider((currentStep, totalSteps) => {
             setSliderValue(currentStep);
             setMaxSliderValue(totalSteps);
@@ -59,7 +59,7 @@ function Interface() {
         isPlaying ? managerRef.current?.pauseAlgo() : managerRef.current?.playAlgo();
     }, [isPlaying]);
 
-    const handleSliderChange = useCallback((e) => {
+    const handleSlider = useCallback((e) => {
         setActiveMode(null);
         const newValue = parseInt(e.target.value, 10);
         setSliderValue(newValue);
@@ -84,35 +84,16 @@ function Interface() {
         selectStart: 'Select a start node',
     };
 
-    const buttonsDisabled = sliderValue > 0;
-
     return (
         <div className="interface-container">
             <div ref={containerRef}></div>
 
             {activeMode && modeMessages[activeMode] && <div className="tip-message">{modeMessages[activeMode]}</div>}
 
-            <PlaybackControls 
-                isPlaying={isPlaying} 
-                sliderValue={sliderValue} 
-                maxSliderValue={maxSliderValue} 
-                handlePlayPause={handlePlayPause} 
-                handleReset={handleReset} 
-                handleSliderChange={handleSliderChange} 
-            />
+            <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
 
             {buttonConfigs.map(({ id, text, action, position, colors }) => (
-                <ControlButton
-                    key={id}
-                    config={{
-                        id,
-                        text,
-                        onClick: action,
-                        position,
-                        colors,
-                        disabled: buttonsDisabled,
-                    }}
-                />
+                <ControlButton key={id} text={text} onClick={action} position={position} colors={colors} disabled={sliderValue > 0} />
             ))}
         </div>
     );

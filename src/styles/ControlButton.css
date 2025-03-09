@@ -1,12 +1,13 @@
 .control-button {
     position: absolute;
-    padding: 10px 20px;
-    color: #FFFFFF;
+    padding: 10px 15px;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease;
+    font-size: 16px;
 }
 
 .control-button:hover {
@@ -15,4 +16,9 @@
 
 .control-button:active {
     transform: translateY(1px);
+}
+
+.control-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

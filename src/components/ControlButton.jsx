@@ -1,34 +1,19 @@
 import React from 'react';
+import '../styles/ControlButton.css';
 
-function ControlButton({ config }) {
-    const { text, onClick, position, colors, disabled } = config;
-    
+const ControlButton = ({ text, onClick, position, colors, disabled }) => {
     const buttonStyle = {
         ...position,
         backgroundColor: colors.default,
         position: 'absolute',
-        padding: '10px 15px',
-        border: 'none',
-        borderRadius: '5px',
-        color: 'white',
-        fontSize: '16px',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        transition: 'background-color 0.3s',
-        opacity: disabled ? 0.5 : 1,
     };
-    
-    const handleClick = (e) => {
-        if (!disabled) {
-            onClick(e);
-        }
-    };
-    
+
     const handleMouseOver = (e) => {
         if (!disabled) {
             e.target.style.backgroundColor = colors.hover;
         }
     };
-    
+
     const handleMouseOut = (e) => {
         if (!disabled) {
             e.target.style.backgroundColor = colors.default;
@@ -36,16 +21,10 @@ function ControlButton({ config }) {
     };
 
     return (
-        <button
-            style={buttonStyle}
-            onClick={handleClick}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
-            disabled={disabled}
-        >
+        <button className="control-button" style={buttonStyle} onClick={disabled ? undefined : onClick} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} disabled={disabled}>
             {text}
         </button>
     );
-}
+};
 
 export default ControlButton;
