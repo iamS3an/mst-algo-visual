@@ -121,6 +121,9 @@ export function createScene(container) {
         useSlider: (step) => {
             toggleMode(null);
             visualizeMST(step, state.algoSteps);
+            if (step === state.algoSteps.length) {
+                state.isPlaying = false;
+            }
             state.lastStep = step;
         },
         updateSlider: (callback) => {
