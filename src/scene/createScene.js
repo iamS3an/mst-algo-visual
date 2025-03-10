@@ -78,7 +78,7 @@ export function createScene(container) {
 
     const executeAlgo = async () => {
         while (state.lastStep < state.algoSteps.length) {
-            await sleep(1000);
+            await sleep(500);
             if (!state.isPlaying) {
                 return;
             }
