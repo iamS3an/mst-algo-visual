@@ -13,7 +13,7 @@ const defineNode = (x, y, z) => {
     return node;
 };
 
-export function createNode(scene, nodes, x = 0, y = 0, z = 0) {
+export function createNode(scene, nodes, x = Math.random() * 80 - 40, y = Math.random() * 80 - 40, z = Math.random() * 80 - 40) {
     const node = defineNode(x, y, z);
     scene.add(node);
     nodes.push(node);
