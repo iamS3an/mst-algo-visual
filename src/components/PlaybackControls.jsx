@@ -4,10 +4,10 @@ import '../styles/PlaybackControls.css';
 const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPause, handleReset, handleSliderChange }) => {
     return (
         <div className="controls-container">
-            <button onClick={handlePlayPause} className="play-button">
+            <button onClick={handlePlayPause} className="play-button" disabled={maxSliderValue === 0}>
                 {isPlaying ? '⏸' : '▶'}
             </button>
-            <button onClick={handleReset} className="play-button">
+            <button onClick={handleReset} className="play-button" disabled={maxSliderValue === 0 || sliderValue === 0}>
                 ⏹
             </button>
             <div className="slider-container">
@@ -22,6 +22,7 @@ const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPa
                     style={{
                         background: `linear-gradient(to right, #007BFF 0%, #007BFF ${(sliderValue / maxSliderValue) * 100}%, #ddd ${(sliderValue / maxSliderValue) * 100}%, #ddd 100%)`,
                     }}
+                    disabled={maxSliderValue === 0}
                 />
                 <span className="time-display">{maxSliderValue}</span>
             </div>

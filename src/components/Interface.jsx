@@ -24,7 +24,7 @@ function Interface() {
     }, []);
 
     useEffect(() => {
-        if (sliderValue === maxSliderValue) {
+        if (sliderValue === maxSliderValue || sliderValue === 0) {
             setIsPlaying(false);
         }
     }, [sliderValue, maxSliderValue]);
@@ -66,13 +66,13 @@ function Interface() {
     }, []);
 
     const buttonConfigs = [
-        { id: 'example', text: 'Example', action: handleReload, position: { bottom: '20px', right: '20px' }, colors: { default: '#007BFF', hover: '#0056b3' } },
-        { id: 'clear', text: 'Clear', action: handleClearScene, position: { bottom: '20px', left: '20px' }, colors: { default: '#FFA000', hover: '#FF8000' } },
-        { id: 'addNode', text: 'Add Node', action: () => toggleMode(null, 'addNode'), position: { top: '20px', left: '20px' }, colors: { default: '#02C874', hover: '#02A05D' } },
-        { id: 'removeNode', text: activeMode === 'removeNode' ? 'Cancel' : 'Remove Node', action: () => toggleMode('removeNode', 'removeNode'), position: { top: '20px', left: '150px' }, colors: { default: '#02C874', hover: '#02A05D' } },
-        { id: 'addEdge', text: activeMode === 'addEdge' ? 'Cancel' : 'Add Edge', action: () => toggleMode('addEdge', 'addEdge'), position: { top: '80px', left: '20px' }, colors: { default: '#3B3B3B', hover: '#363636' } },
-        { id: 'removeEdge', text: activeMode === 'removeEdge' ? 'Cancel' : 'Remove Edge', action: () => toggleMode('removeEdge', 'removeEdge'), position: { top: '80px', left: '150px' }, colors: { default: '#3B3B3B', hover: '#363636' } },
-        { id: 'selectStart', text: activeMode === 'selectStart' ? 'Cancel' : 'Select Start Point', action: () => toggleMode('selectStart', 'selectStart'), position: { top: '140px', left: '20px' }, colors: { default: '#FF0000', hover: '#CC0000' } },
+        { id: 'example', text: 'Example', action: handleReload },
+        { id: 'clear', text: 'Clear Objects', action: handleClearScene },
+        { id: 'addNode', text: 'Add Node', action: () => toggleMode(null, 'addNode') },
+        { id: 'removeNode', text: activeMode === 'removeNode' ? 'Cancel' : 'Remove Node', action: () => toggleMode('removeNode', 'removeNode') },
+        { id: 'addEdge', text: activeMode === 'addEdge' ? 'Cancel' : 'Add Edge', action: () => toggleMode('addEdge', 'addEdge') },
+        { id: 'removeEdge', text: activeMode === 'removeEdge' ? 'Cancel' : 'Remove Edge', action: () => toggleMode('removeEdge', 'removeEdge') },
+        { id: 'selectStart', text: activeMode === 'selectStart' ? 'Cancel' : 'Select Start Point', action: () => toggleMode('selectStart', 'selectStart') },
     ];
 
     const modeMessages = {
@@ -90,8 +90,8 @@ function Interface() {
 
             <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
 
-            {buttonConfigs.map(({ id, text, action, position, colors }) => (
-                <ControlButton key={id} text={text} onClick={action} position={position} colors={colors} disabled={sliderValue > 0} />
+            {buttonConfigs.map(({ id, text, action }) => (
+                <ControlButton key={id} id={id} text={text} onClick={action} disabled={sliderValue > 0} />
             ))}
         </div>
     );

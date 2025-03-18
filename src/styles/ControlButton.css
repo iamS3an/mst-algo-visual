@@ -22,3 +22,66 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.button-example {
+    bottom: 20px;
+    right: 20px;
+    background-color: #007BFF;
+}
+.button-example:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.button-clear {
+    bottom: 20px;
+    left: 20px;
+    background-color: #FFA000;
+}
+.button-clear:hover:not(:disabled) {
+    background-color: #FF8000;
+}
+
+.button-addNode {
+    top: 20px;
+    left: 20px;
+    background-color: #02C874;
+}
+.button-addNode:hover:not(:disabled) {
+    background-color: #02A05D;
+}
+
+.button-removeNode {
+    top: 20px;
+    left: 150px;
+    background-color: #02C874;
+}
+.button-removeNode:hover:not(:disabled) {
+    background-color: #02A05D;
+}
+
+.button-addEdge {
+    top: 80px;
+    left: 20px;
+    background-color: #3B3B3B;
+}
+.button-addEdge:hover:not(:disabled) {
+    background-color: #363636;
+}
+
+.button-removeEdge {
+    top: 80px;
+    left: 150px;
+    background-color: #3B3B3B;
+}
+.button-removeEdge:hover:not(:disabled) {
+    background-color: #363636;
+}
+
+.button-selectStart {
+    top: 140px;
+    left: 20px;
+    background-color: #FF0000;
+}
+.button-selectStart:hover:not(:disabled) {
+    background-color: #CC0000;
+}
