@@ -8,7 +8,7 @@ const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPa
                 {isPlaying ? '⏸' : '▶'}
             </button>
             <button onClick={handleReset} className="play-button" disabled={maxSliderValue === 0 || sliderValue === 0}>
-                ⏹
+                ↺
             </button>
             <div className="slider-container">
                 <span className="time-display">{sliderValue}</span>
