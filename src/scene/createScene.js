@@ -90,7 +90,7 @@ export function createScene(container) {
 
     const uiController = {
         clearScene: clearElements,
-        reload: () => {
+        genExample: () => {
             clearElements();
             setupExample();
         },

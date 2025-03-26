@@ -24,7 +24,7 @@
 }
 
 .button-example {
-    bottom: 20px;
+    top: 80px;
     right: 20px;
     background-color: #007BFF;
 }
@@ -33,8 +33,8 @@
 }
 
 .button-clear {
-    bottom: 20px;
-    left: 20px;
+    top: 20px;
+    right: 20px;
     background-color: #FFA000;
 }
 .button-clear:hover:not(:disabled) {

@@ -34,16 +34,6 @@ function Interface() {
         managerRef.current?.[action]?.();
     }, []);
 
-    const handleReload = useCallback(() => {
-        setActiveMode(null);
-        managerRef.current?.reload();
-    }, []);
-
-    const handleClearScene = useCallback(() => {
-        setActiveMode(null);
-        managerRef.current?.clearScene();
-    }, []);
-
     const handlePlayPause = useCallback(() => {
         setActiveMode(null);
         setIsPlaying((prev) => !prev);
@@ -66,8 +56,8 @@ function Interface() {
     }, []);
 
     const buttonConfigs = [
-        { id: 'example', text: 'Example', action: handleReload },
-        { id: 'clear', text: 'Clear Objects', action: handleClearScene },
+        { id: 'clear', text: 'Clear All', action: () => toggleMode(null, 'clearScene') },
+        { id: 'example', text: 'Example', action: () => toggleMode(null, 'genExample') },
         { id: 'addNode', text: 'Add Node', action: () => toggleMode(null, 'addNode') },
         { id: 'removeNode', text: activeMode === 'removeNode' ? 'Cancel' : 'Remove Node', action: () => toggleMode('removeNode', 'removeNode') },
         { id: 'addEdge', text: activeMode === 'addEdge' ? 'Cancel' : 'Add Edge', action: () => toggleMode('addEdge', 'addEdge') },
