@@ -20,11 +20,18 @@ export function prim(nodes, edges, algoSteps) {
             break;
         }
 
-        candidateEdges.sort((a, b) => (a.userData.weight || 0) - (b.userData.weight || 0));
-        const chosenEdge = candidateEdges[0];
-        algoSteps.push(chosenEdge);
+        algoSteps.push(...candidateEdges);
 
-        const { nodeA, nodeB } = chosenEdge.userData;
+        const minEdge = candidateEdges.reduce((min, edge) => {
+            const minWeight = min.userData.weight || 0;
+            const edgeWeight = edge.userData.weight || 0;
+            return edgeWeight < minWeight ? edge : min;
+        });
+        if (algoSteps[algoSteps.length - 1] !== minEdge) {
+            algoSteps.push(minEdge);
+        }
+        
+        const { nodeA, nodeB } = minEdge.userData;
         const nodeToAdd = visited.has(nodeA) ? nodeB : nodeA;
         visited.add(nodeToAdd);
         algoSteps.push(nodeToAdd);

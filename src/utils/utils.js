@@ -12,12 +12,15 @@ export function visualizeMST(targetStep, algoSteps) {
             algoSteps[i].userData.originalColor = algoSteps[i].material.color.clone();
         }
         if (algoSteps[i].userData.weight) {
+            if (algoSteps[i - 1].userData.weight) {
+                algoSteps[i - 1].material.color.copy(algoSteps[i - 1].userData.originalColor);
+            }
             algoSteps[i].material.color.set('#FFFFFF');
         } else {
             algoSteps[i].material.color.set('#007BFF');
         }
     }
-};
+}
 
 export function setSelected(node, selectedNodes) {
     if (!selectedNodes.includes(node)) {
