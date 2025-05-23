@@ -12,9 +12,9 @@ export function visualizeMST(targetStep, algoSteps) {
             algoSteps[i].userData.originalColor = algoSteps[i].material.color.clone();
         }
         if (algoSteps[i].userData.weight) {
-            if (algoSteps[i - 1].userData.weight) {
-                algoSteps[i - 1].material.color.copy(algoSteps[i - 1].userData.originalColor);
-            }
+            // if (i > 0 && algoSteps[i - 1].userData.weight) {
+            //     algoSteps[i - 1].material.color.copy(algoSteps[i - 1].userData.originalColor);
+            // }
             algoSteps[i].material.color.set('#FFFFFF');
         } else {
             algoSteps[i].material.color.set('#007BFF');
@@ -54,10 +54,10 @@ export function createExample(scene, nodes, edges, numNodes = 9, randomEdges = 4
         createNode(scene, nodes, x, y, z);
     }
 
-    const startIndex = Math.floor(Math.random() * (numNodes - 2));
-    const startNode = nodes[startIndex];
-    startNode.material.color.set('#FF0000');
-    startNode.userData.start = true;
+    // const startIndex = Math.floor(Math.random() * (numNodes - 2));
+    // const startNode = nodes[startIndex];
+    // startNode.material.color.set('#FF0000');
+    // startNode.userData.start = true;
 
     for (let i = 0; i < numNodes - 2; i++) {
         createEdge(scene, edges, [nodes[i], nodes[(i + 1) % (numNodes - 2)]]);

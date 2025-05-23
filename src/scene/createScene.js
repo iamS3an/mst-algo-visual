@@ -2,7 +2,7 @@ import { initScene } from './initScene';
 import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/eventHandlers';
 import { createExample, visualizeMST } from '../utils/utils';
 import { createNode } from './nodes';
-import { prim } from '../utils/algo';
+import { runAlgo } from '../utils/algo';
 
 export function createScene(container) {
     if (container) container.innerHTML = '';
@@ -15,7 +15,7 @@ export function createScene(container) {
 
     const setupExample = () => {
         createExample(scene, nodes, edges);
-        prim(nodes, edges, state.algoSteps);
+        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
         if (sliderCallback) sliderCallback(0, state.algoSteps.length);
     };
 
@@ -104,6 +104,19 @@ export function createScene(container) {
         selectStart: () => toggleMode('selectStart'),
         useAlgo: (algo) => {
             toggleMode(null);
+            state.selectedAlgo = algo;
+            if (algo === 'kruskal') {
+                for (let i = 0; i < nodes.length; i++) {
+                    if (nodes[i].userData.start) {
+                        nodes[i].userData.start = false;
+                        nodes[i].material.color.set('#02C874');
+                        nodes[i].userData.originalColor = nodes[i].material.color.clone();
+                        break;
+                    }
+                }
+            }
+            runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
+            if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
         },
         playAlgo: () => {
             toggleMode(null);

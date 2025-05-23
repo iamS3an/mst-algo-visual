@@ -31,6 +31,7 @@ export function initScene(container) {
             removeEdge: false,
             selectStart: false,
         },
+        selectedAlgo: 'prim',
         clickedNode: null,
         isPlaying: false,
         lastStep: 0,

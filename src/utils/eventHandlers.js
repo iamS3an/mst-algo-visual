@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { setSelected, resetSelected } from './utils';
 import { updateEdge, createEdge, deleteEdge } from '../scene/edges';
 import { deleteNode, chooseStart } from '../scene/nodes';
-import { prim } from './algo';
+import { runAlgo } from './algo';
 
 const updateRaycasterFromEvent = (raycaster, camera, pointer, event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -42,7 +42,7 @@ export function onPointerDown(event, params) {
             plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.clickedNode.position);
             offset.copy(intersects[0].point).sub(state.clickedNode.position);
         }
-        prim(nodes, edges, state.algoSteps);
+        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
         if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
     }
 }
@@ -61,7 +61,7 @@ export function onPointerMove(event, params) {
             }
         }
     }
-    prim(nodes, edges, state.algoSteps);
+    runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
     if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
 }
 
