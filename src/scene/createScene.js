@@ -102,6 +102,9 @@ export function createScene(container) {
         addEdge: () => toggleMode('addEdge'),
         removeEdge: () => toggleMode('removeEdge'),
         selectStart: () => toggleMode('selectStart'),
+        useAlgo: (algo) => {
+            toggleMode(null);
+        },
         playAlgo: () => {
             toggleMode(null);
             if (state.algoSteps.length > 0) {

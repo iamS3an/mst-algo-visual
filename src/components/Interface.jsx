@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { createScene } from '../scene/createScene';
 import ControlButton from './ControlButton';
 import PlaybackControls from './PlaybackControls';
+import Sidebar from './Sidebar';
 import '../styles/Interface.css';
 
 function Interface() {
@@ -11,6 +12,8 @@ function Interface() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [sliderValue, setSliderValue] = useState(0);
     const [maxSliderValue, setMaxSliderValue] = useState(0);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [usingAlgo, setUsingAlgo] = useState('prim');
 
     useEffect(() => {
         managerRef.current = createScene(containerRef.current);
@@ -29,9 +32,21 @@ function Interface() {
         }
     }, [sliderValue, maxSliderValue]);
 
-    const toggleMode = useCallback((mode, action) => {
+    useEffect(() => {
+        if (isPlaying || sliderValue > 0) {
+            setIsSidebarOpen(false);
+        }
+    }, [isPlaying, sliderValue]);
+
+    const handleMode = useCallback((mode, action) => {
         setActiveMode((prev) => (prev === mode ? null : mode));
         managerRef.current?.[action]?.();
+    }, []);
+
+    const handleAlgo = useCallback((algo) => {
+        setActiveMode(algo);
+        setUsingAlgo(algo);
+        managerRef.current?.useAlgo(algo);
     }, []);
 
     const handlePlayPause = useCallback(() => {
@@ -56,13 +71,13 @@ function Interface() {
     }, []);
 
     const buttonConfigs = [
-        { id: 'clear', text: 'Clear All', action: () => toggleMode(null, 'clearScene') },
-        { id: 'example', text: 'Example', action: () => toggleMode(null, 'genExample') },
-        { id: 'addNode', text: 'Add Node', action: () => toggleMode(null, 'addNode') },
-        { id: 'removeNode', text: activeMode === 'removeNode' ? 'Cancel' : 'Remove Node', action: () => toggleMode('removeNode', 'removeNode') },
-        { id: 'addEdge', text: activeMode === 'addEdge' ? 'Cancel' : 'Add Edge', action: () => toggleMode('addEdge', 'addEdge') },
-        { id: 'removeEdge', text: activeMode === 'removeEdge' ? 'Cancel' : 'Remove Edge', action: () => toggleMode('removeEdge', 'removeEdge') },
-        { id: 'selectStart', text: activeMode === 'selectStart' ? 'Cancel' : 'Select Start Point', action: () => toggleMode('selectStart', 'selectStart') },
+        { id: 'clear', text: 'Clear All', action: () => handleMode(null, 'clearScene') },
+        { id: 'example', text: 'Example', action: () => handleMode(null, 'genExample') },
+        { id: 'addNode', text: 'Add Node', action: () => handleMode(null, 'addNode') },
+        { id: 'removeNode', text: activeMode === 'removeNode' ? 'Cancel' : 'Remove Node', action: () => handleMode('removeNode', 'removeNode') },
+        { id: 'addEdge', text: activeMode === 'addEdge' ? 'Cancel' : 'Add Edge', action: () => handleMode('addEdge', 'addEdge') },
+        { id: 'removeEdge', text: activeMode === 'removeEdge' ? 'Cancel' : 'Remove Edge', action: () => handleMode('removeEdge', 'removeEdge') },
+        { id: 'selectStart', text: activeMode === 'selectStart' ? 'Cancel' : 'Select Start Point', action: () => handleMode('selectStart', 'selectStart'), hidden: usingAlgo !== 'prim' },
     ];
 
     const modeMessages = {
@@ -75,14 +90,10 @@ function Interface() {
     return (
         <div className="interface-container">
             <div ref={containerRef}></div>
-
+            {!(isPlaying || sliderValue > 0) && buttonConfigs.map(({ id, text, action, hidden = false }) => <ControlButton key={id} id={id} text={text} onClick={action} hidden={hidden} />)}
             {activeMode && modeMessages[activeMode] && <div className="tip-message">{modeMessages[activeMode]}</div>}
-
             <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
-
-            {buttonConfigs.map(({ id, text, action }) => (
-                <ControlButton key={id} id={id} text={text} onClick={action} disabled={sliderValue > 0} />
-            ))}
+            {!(isPlaying || sliderValue > 0) && (<Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} handleAlgo={handleAlgo} />)}
         </div>
     );
 }
