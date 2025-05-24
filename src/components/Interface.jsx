@@ -27,16 +27,10 @@ function Interface() {
     }, []);
 
     useEffect(() => {
-        if (sliderValue === maxSliderValue || sliderValue === 0) {
+        if (sliderValue === 0 || sliderValue === maxSliderValue) {
             setIsPlaying(false);
         }
     }, [sliderValue, maxSliderValue]);
-
-    useEffect(() => {
-        if (isPlaying || sliderValue > 0) {
-            setIsSidebarOpen(false);
-        }
-    }, [isPlaying, sliderValue]);
 
     const handleMode = useCallback((mode, action) => {
         setActiveMode((prev) => (prev === mode ? null : mode));
