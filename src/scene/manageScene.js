@@ -1,10 +1,10 @@
 import { initScene } from './initScene';
-import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/eventHandlers';
+import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/handleEvents';
 import { createExample, visualizeMST } from '../utils/utils';
 import { createNode } from './nodes';
 import { runAlgo } from '../utils/algo';
 
-export function createScene(container) {
+export function manageScene(container) {
     if (container) container.innerHTML = '';
 
     const { scene, camera, renderer, controls, pointer, raycaster, plane, offset, state } = initScene(container);

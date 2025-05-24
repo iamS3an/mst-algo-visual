@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/PlaybackControls.css';
 
 const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPause, handleReset, handleSliderChange }) => {

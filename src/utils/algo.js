@@ -1,16 +1,3 @@
-export function runAlgo(algo, nodes, edges, algoSteps) {
-    switch (algo) {
-        case 'prim':
-            prim(nodes, edges, algoSteps);
-            break;
-        case 'kruskal':
-            kruskal(nodes, edges, algoSteps);
-            break;
-        default:
-            console.error('Unknown algorithm:', algo);
-    }
-}
-
 const prim = (nodes, edges, algoSteps) => {
     algoSteps.length = 0;
 
@@ -43,22 +30,22 @@ const prim = (nodes, edges, algoSteps) => {
         if (algoSteps[algoSteps.length - 1] !== minEdge) {
             algoSteps.push(minEdge);
         }
-        
+
         const { nodeA, nodeB } = minEdge.userData;
         const nodeToAdd = visited.has(nodeA) ? nodeB : nodeA;
         visited.add(nodeToAdd);
         algoSteps.push(nodeToAdd);
     }
-}
+};
 
 const kruskal = (nodes, edges, algoSteps) => {
     algoSteps.length = 0;
     if (!nodes.length || !edges.length) return;
 
-    const parent = new Map(nodes.map(n => [n, n]));
-    const rank   = new Map(nodes.map(n => [n, 0]));
+    const parent = new Map(nodes.map((n) => [n, n]));
+    const rank = new Map(nodes.map((n) => [n, 0]));
 
-    const find = u => {
+    const find = (u) => {
         if (parent.get(u) !== u) {
             parent.set(u, find(parent.get(u)));
         }
@@ -66,10 +53,12 @@ const kruskal = (nodes, edges, algoSteps) => {
     };
 
     const union = (a, b) => {
-        const ra = find(a), rb = find(b);
+        const ra = find(a),
+            rb = find(b);
         if (ra === rb) return false;
-        const rA = rank.get(ra), rB = rank.get(rb);
-        if (rA < rB)      parent.set(ra, rb);
+        const rA = rank.get(ra),
+            rB = rank.get(rb);
+        if (rA < rB) parent.set(ra, rb);
         else if (rA > rB) parent.set(rb, ra);
         else {
             parent.set(rb, ra);
@@ -78,9 +67,7 @@ const kruskal = (nodes, edges, algoSteps) => {
         return true;
     };
 
-    const sortedEdges = [...edges].sort((e1, e2) =>
-        (e1.userData.weight || 0) - (e2.userData.weight || 0)
-    );
+    const sortedEdges = [...edges].sort((e1, e2) => (e1.userData.weight || 0) - (e2.userData.weight || 0));
 
     const need = nodes.length - 1;
     let count = 0;
@@ -95,3 +82,16 @@ const kruskal = (nodes, edges, algoSteps) => {
         }
     }
 };
+
+export function runAlgo(algo, nodes, edges, algoSteps) {
+    switch (algo) {
+        case 'prim':
+            prim(nodes, edges, algoSteps);
+            break;
+        case 'kruskal':
+            kruskal(nodes, edges, algoSteps);
+            break;
+        default:
+            console.error('Unknown algorithm:', algo);
+    }
+}
