@@ -14,16 +14,21 @@ function Interface() {
     const [maxSliderValue, setMaxSliderValue] = useState(0);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [usingAlgo, setUsingAlgo] = useState('prim');
+    const [stage, setStage] = useState(null);
 
     useEffect(() => {
         managerRef.current = manageScene(containerRef.current);
 
-        managerRef.current.updateSlider((currentStep, totalSteps) => {
+        managerRef.current.initSlider((currentStep, totalSteps) => {
             setSliderValue(currentStep);
             setMaxSliderValue(totalSteps);
         });
 
-        return () => managerRef.current.cleanup();
+        managerRef.current.initHint((stage) => {
+            setStage(stage);
+        });
+
+        return () => managerRef.current.disposeResource();
     }, []);
 
     useEffect(() => {
@@ -74,7 +79,7 @@ function Interface() {
         { id: 'selectStart', text: activeAction === 'selectStart' ? 'Cancel' : 'Select Start Point', action: () => handleAction('selectStart', 'selectStart'), hidden: usingAlgo !== 'prim' },
     ];
 
-    const modeMessages = {
+    const hintMessages = {
         removeNode: 'Select a node to delete',
         addEdge: 'Select two nodes to connect',
         removeEdge: 'Select two nodes to disconnect',
@@ -85,7 +90,7 @@ function Interface() {
         <div className="interface-container">
             <div ref={containerRef}></div>
             {!(isPlaying || sliderValue > 0) && buttonConfigs.map(({ id, text, action, hidden = false }) => <ControlButton key={id} id={id} text={text} onClick={action} hidden={hidden} />)}
-            {activeAction && modeMessages[activeAction] && <div className="tip-message">{modeMessages[activeAction]}</div>}
+            {activeAction && hintMessages[activeAction] && <div className="hint-message">{hintMessages[activeAction]}</div>}
             <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
             {!(isPlaying || sliderValue > 0) && <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} handleAlgo={handleAlgo} />}
         </div>

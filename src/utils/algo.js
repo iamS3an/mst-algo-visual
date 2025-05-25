@@ -1,4 +1,4 @@
-const prim = (nodes, edges, algoSteps) => {
+const prim = (nodes, edges, algoSteps, algoHints) => {
     algoSteps.length = 0;
 
     const startNode = nodes.find((node) => node.userData && node.userData.start);
@@ -38,7 +38,7 @@ const prim = (nodes, edges, algoSteps) => {
     }
 };
 
-const kruskal = (nodes, edges, algoSteps) => {
+const kruskal = (nodes, edges, algoSteps, algoHints) => {
     algoSteps.length = 0;
     if (!nodes.length || !edges.length) return;
 
@@ -83,13 +83,13 @@ const kruskal = (nodes, edges, algoSteps) => {
     }
 };
 
-export function runAlgo(algo, nodes, edges, algoSteps) {
+export function runAlgo(algo, nodes, edges, algoSteps, algoHints) {
     switch (algo) {
         case 'prim':
-            prim(nodes, edges, algoSteps);
+            prim(nodes, edges, algoSteps, algoHints);
             break;
         case 'kruskal':
-            kruskal(nodes, edges, algoSteps);
+            kruskal(nodes, edges, algoSteps, algoHints);
             break;
         default:
             console.error('Unknown algorithm:', algo);

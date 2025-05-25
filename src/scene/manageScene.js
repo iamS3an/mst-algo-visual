@@ -11,11 +11,11 @@ export function manageScene(container) {
 
     const nodes = [];
     const edges = [];
-    let sliderCallback = null;
+    let sliderCallback = null, hintCallback = null;
 
     const setupExample = () => {
         createExample(scene, nodes, edges);
-        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
+        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
         if (sliderCallback) sliderCallback(0, state.algoSteps.length);
     };
 
@@ -115,7 +115,7 @@ export function manageScene(container) {
                     }
                 }
             }
-            runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
+            runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
             if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
         },
         playAlgo: () => {
@@ -134,6 +134,12 @@ export function manageScene(container) {
         pauseAlgo: () => {
             state.isPlaying = false;
         },
+        initHint: (callback) => {
+            hintCallback = callback;
+        },
+        initSlider: (callback) => {
+            sliderCallback = callback;
+        },
         useSlider: (step) => {
             toggleMode(null);
             visualizeMST(step, state.algoSteps);
@@ -142,11 +148,7 @@ export function manageScene(container) {
             }
             state.lastStep = step;
         },
-        updateSlider: (callback) => {
-            sliderCallback = callback;
-            sliderCallback(state.lastStep, state.algoSteps.length);
-        },
-        cleanup: () => {
+        disposeResource: () => {
             clearElements();
             updateEventListeners(false);
             sliderCallback = null;

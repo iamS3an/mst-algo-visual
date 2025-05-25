@@ -42,7 +42,7 @@ export function onPointerDown(event, params) {
             plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.clickedNode.position);
             offset.copy(intersects[0].point).sub(state.clickedNode.position);
         }
-        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
+        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
         if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
     }
 }
@@ -61,7 +61,7 @@ export function onPointerMove(event, params) {
             }
         }
     }
-    runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps);
+    runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
     if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
 }
 

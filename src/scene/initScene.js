@@ -32,11 +32,12 @@ export function initScene(container) {
             selectStart: false,
         },
         selectedAlgo: 'prim',
+        algoHints: [],
+        algoSteps: [],
         clickedNode: null,
         isPlaying: false,
         lastStep: 0,
         selectedNodes: [],
-        algoSteps: [],
     };
 
     return { scene, camera, renderer, controls, pointer, raycaster, plane, offset, state };
