@@ -80,10 +80,10 @@ function Interface() {
     ];
 
     const hintMessages = {
-        removeNode: 'Select a node to delete',
-        addEdge: 'Select two nodes to connect',
-        removeEdge: 'Select two nodes to disconnect',
-        selectStart: 'Select a start node',
+        removeNode: 'Select a node to delete (Press again to cancel)',
+        addEdge: 'Select two nodes to connect (Press again to cancel)',
+        removeEdge: 'Select two nodes to disconnect (Press again to cancel)',
+        selectStart: 'Select a start node (Press again to cancel)',
         primStart: 'Start from the selected vertex and mark it as selected',
         primEdge: 'Choose the smallest-weight edge connecting a selected vertex to an unselected vertex',
         kruskalEdge: 'Choose the smallest-weight edge and examine if it forms a cycle from the current tree',
@@ -94,7 +94,8 @@ function Interface() {
         <div className="interface-container">
             <div ref={containerRef}></div>
             {!(isPlaying || sliderValue > 0) && buttonConfigs.map(({ id, text, action, hidden = false }) => <ControlButton key={id} id={id} text={text} onClick={action} hidden={hidden} />)}
-            {(activeAction || (sliderValue > 0 && algoHint)) && <div className="hint-message">{hintMessages[activeAction || algoHint]}</div>}
+            {(activeAction) && <div className="action-hint-message">{hintMessages[activeAction]}</div>}
+            {sliderValue > 0 && <div className="algo-hint-message">{hintMessages[algoHint]}</div>}
             <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
             {!(isPlaying || sliderValue > 0) && <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} handleAlgo={handleAlgo} />}
         </div>

@@ -7,15 +7,34 @@
     overflow: hidden;
 }
 
-.hint-message {
+.action-hint-message {
     position: absolute;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
     padding: 5px 20px;
+    font-size: 20px;
     background-color: #F3FF9A;
     color: #000000;
     border: 1px solid #000;
     border-radius: 5px;
+    z-index: 9999;
+}
+
+.algo-hint-message {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    transform: none;
+    padding: 20px;
+    background-color: #F3FF9A;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 0;
+    width: 300px;
+    min-height: 100px;
+    max-width: none;
+    font-size: 16px;
+    text-align: center;
     z-index: 9999;
 }
