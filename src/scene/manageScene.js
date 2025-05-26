@@ -11,14 +11,13 @@ export function manageScene(container) {
 
     const nodes = [];
     const edges = [];
-    let sliderCallback = null, hintCallback = null;
+    let sliderCallback = null,
+        hintCallback = null;
 
     const setupExample = () => {
-        createExample(scene, nodes, edges);
+        createExample(scene, nodes, edges, state.selectedAlgo === 'prim');
         runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
-        if (sliderCallback) sliderCallback(0, state.algoSteps.length);
     };
-
     setupExample();
 
     const animate = () => {
@@ -71,20 +70,22 @@ export function manageScene(container) {
         });
         edges.length = 0;
 
-        if (sliderCallback) sliderCallback(0, 0);
+        sliderCallback(0, 0);
+        hintCallback(0, 0);
     };
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const executeAlgo = async () => {
         while (state.lastStep < state.algoSteps.length) {
-            await sleep(1000);
+            await sleep(1500);
             if (!state.isPlaying) {
                 return;
             }
             state.lastStep++;
             visualizeMST(state.lastStep, state.algoSteps);
-            if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
+            sliderCallback(state.lastStep, state.algoSteps.length);
+            hintCallback(state.algoHints[state.lastStep - 1]);
         }
     };
 
@@ -93,6 +94,7 @@ export function manageScene(container) {
         genExample: () => {
             clearElements();
             setupExample();
+            sliderCallback(0, state.algoSteps.length);
         },
         addNode: () => {
             toggleMode(null);
@@ -102,7 +104,7 @@ export function manageScene(container) {
         addEdge: () => toggleMode('addEdge'),
         removeEdge: () => toggleMode('removeEdge'),
         selectStart: () => toggleMode('selectStart'),
-        useAlgo: (algo) => {
+        chooseAlgo: (algo) => {
             toggleMode(null);
             state.selectedAlgo = algo;
             if (algo === 'kruskal') {
@@ -116,29 +118,29 @@ export function manageScene(container) {
                 }
             }
             runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
-            if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
+            sliderCallback(0, state.algoSteps.length);
         },
         playAlgo: () => {
             toggleMode(null);
             if (state.algoSteps.length > 0) {
-                if (state.lastStep < state.algoSteps.length) {
-                    state.isPlaying = true;
-                    executeAlgo();
-                } else {
+                state.isPlaying = true;
+                if (state.lastStep === state.algoSteps.length) {
                     state.algoSteps.forEach((obj) => obj.material.color.copy(obj.userData.originalColor));
                     state.lastStep = 0;
-                    if (sliderCallback) sliderCallback(0, state.algoSteps.length);
+                    sliderCallback(0, state.algoSteps.length);
                 }
+                executeAlgo();
             }
         },
         pauseAlgo: () => {
             state.isPlaying = false;
         },
-        initHint: (callback) => {
+        updateHint: (callback) => {
             hintCallback = callback;
         },
-        initSlider: (callback) => {
+        updateSlider: (callback) => {
             sliderCallback = callback;
+            sliderCallback(0, state.algoSteps.length);
         },
         useSlider: (step) => {
             toggleMode(null);
@@ -147,6 +149,7 @@ export function manageScene(container) {
                 state.isPlaying = false;
             }
             state.lastStep = step;
+            if (hintCallback) hintCallback(state.algoHints[step - 1]);
         },
         disposeResource: () => {
             clearElements();

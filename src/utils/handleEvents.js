@@ -43,7 +43,7 @@ export function onPointerDown(event, params) {
             offset.copy(intersects[0].point).sub(state.clickedNode.position);
         }
         runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
-        if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
+        sliderCallback(state.lastStep, state.algoSteps.length);
     }
 }
 
@@ -62,7 +62,6 @@ export function onPointerMove(event, params) {
         }
     }
     runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
-    if (sliderCallback) sliderCallback(state.lastStep, state.algoSteps.length);
 }
 
 export function onPointerUp(params) {

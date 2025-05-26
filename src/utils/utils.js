@@ -43,7 +43,7 @@ export function resetSelected(selectedNodes) {
     selectedNodes.length = 0;
 }
 
-export function createExample(scene, nodes, edges, numNodes = 9, randomEdges = 4, radius = 80) {
+export function createExample(scene, nodes, edges, randomStart = false, numNodes = 9, randomEdges = 4, radius = 80) {
     const randomRadiusX = radius + (Math.random() * 10 - 5);
     const randomRadiusY = radius * 0.7 + (Math.random() * 10 - 5);
     for (let i = 0; i < numNodes - 2; i++) {
@@ -54,10 +54,12 @@ export function createExample(scene, nodes, edges, numNodes = 9, randomEdges = 4
         createNode(scene, nodes, x, y, z);
     }
 
-    // const startIndex = Math.floor(Math.random() * (numNodes - 2));
-    // const startNode = nodes[startIndex];
-    // startNode.material.color.set('#FF0000');
-    // startNode.userData.start = true;
+    if (randomStart) {
+        const startIndex = Math.floor(Math.random() * (numNodes - 2));
+        const startNode = nodes[startIndex];
+        startNode.material.color.set('#FF0000');
+        startNode.userData.start = true;
+    }
 
     for (let i = 0; i < numNodes - 2; i++) {
         createEdge(scene, edges, [nodes[i], nodes[(i + 1) % (numNodes - 2)]]);

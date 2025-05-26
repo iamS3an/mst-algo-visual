@@ -14,25 +14,25 @@ function Interface() {
     const [maxSliderValue, setMaxSliderValue] = useState(0);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [usingAlgo, setUsingAlgo] = useState('prim');
-    const [stage, setStage] = useState(null);
+    const [algoHint, setAlgoHint] = useState(null);
 
     useEffect(() => {
         managerRef.current = manageScene(containerRef.current);
 
-        managerRef.current.initSlider((currentStep, totalSteps) => {
-            setSliderValue(currentStep);
-            setMaxSliderValue(totalSteps);
+        managerRef.current.updateHint((currentHint) => {
+            setAlgoHint(currentHint);
         });
 
-        managerRef.current.initHint((stage) => {
-            setStage(stage);
+        managerRef.current.updateSlider((currentStep, totalSteps) => {
+            setSliderValue(currentStep);
+            setMaxSliderValue(totalSteps);
         });
 
         return () => managerRef.current.disposeResource();
     }, []);
 
     useEffect(() => {
-        if (sliderValue === 0 || sliderValue === maxSliderValue) {
+        if (sliderValue === maxSliderValue) {
             setIsPlaying(false);
         }
     }, [sliderValue, maxSliderValue]);
@@ -43,9 +43,9 @@ function Interface() {
     }, []);
 
     const handleAlgo = useCallback((algo) => {
-        setActiveAction(algo);
+        setActiveAction(null);
         setUsingAlgo(algo);
-        managerRef.current?.useAlgo(algo);
+        managerRef.current?.chooseAlgo(algo);
     }, []);
 
     const handlePlayPause = useCallback(() => {
@@ -84,13 +84,17 @@ function Interface() {
         addEdge: 'Select two nodes to connect',
         removeEdge: 'Select two nodes to disconnect',
         selectStart: 'Select a start node',
+        primStart: 'Start from the selected vertex and mark it as selected',
+        primEdge: 'Choose the smallest-weight edge connecting a selected vertex to an unselected vertex',
+        kruskalEdge: 'Choose the smallest-weight edge and examine if it forms a cycle from the current tree',
+        addVertex: 'Add its new vertex to the growing tree',
     };
 
     return (
         <div className="interface-container">
             <div ref={containerRef}></div>
             {!(isPlaying || sliderValue > 0) && buttonConfigs.map(({ id, text, action, hidden = false }) => <ControlButton key={id} id={id} text={text} onClick={action} hidden={hidden} />)}
-            {activeAction && hintMessages[activeAction] && <div className="hint-message">{hintMessages[activeAction]}</div>}
+            {(activeAction || (sliderValue > 0 && algoHint)) && <div className="hint-message">{hintMessages[activeAction || algoHint]}</div>}
             <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
             {!(isPlaying || sliderValue > 0) && <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} handleAlgo={handleAlgo} />}
         </div>

@@ -1,6 +1,4 @@
 const prim = (nodes, edges, algoSteps, algoHints) => {
-    algoSteps.length = 0;
-
     const startNode = nodes.find((node) => node.userData && node.userData.start);
     if (!startNode) {
         return;
@@ -9,6 +7,7 @@ const prim = (nodes, edges, algoSteps, algoHints) => {
     const visited = new Set();
     visited.add(startNode);
     algoSteps.push(startNode);
+    algoHints.push('primStart');
 
     while (visited.size < nodes.length) {
         const candidateEdges = edges.filter((edge) => {
@@ -29,17 +28,18 @@ const prim = (nodes, edges, algoSteps, algoHints) => {
         });
         if (algoSteps[algoSteps.length - 1] !== minEdge) {
             algoSteps.push(minEdge);
+            algoHints.push('primEdge');
         }
 
         const { nodeA, nodeB } = minEdge.userData;
         const nodeToAdd = visited.has(nodeA) ? nodeB : nodeA;
         visited.add(nodeToAdd);
         algoSteps.push(nodeToAdd);
+        algoHints.push('addVertex');
     }
 };
 
 const kruskal = (nodes, edges, algoSteps, algoHints) => {
-    algoSteps.length = 0;
     if (!nodes.length || !edges.length) return;
 
     const parent = new Map(nodes.map((n) => [n, n]));
@@ -76,20 +76,31 @@ const kruskal = (nodes, edges, algoSteps, algoHints) => {
         const { nodeA, nodeB } = edge.userData;
         if (union(nodeA, nodeB)) {
             algoSteps.push(edge);
-            if (!algoSteps.includes(nodeA)) algoSteps.push(nodeA);
-            if (!algoSteps.includes(nodeB)) algoSteps.push(nodeB);
+            algoHints.push('kruskalEdge');
+            if (!algoSteps.includes(nodeA)) {
+                algoSteps.push(nodeA);
+                algoHints.push('addVertex');
+            }
+            if (!algoSteps.includes(nodeB)) {
+                algoSteps.push(nodeB);
+                algoHints.push('addVertex');
+            }
             if (++count === need) break;
         }
     }
 };
 
 export function runAlgo(algo, nodes, edges, algoSteps, algoHints) {
+    algoSteps.length = 0;
+    algoHints.length = 0;
     switch (algo) {
         case 'prim':
             prim(nodes, edges, algoSteps, algoHints);
+            console.log('Prim algorithm completed', algoSteps, algoHints);
             break;
         case 'kruskal':
             kruskal(nodes, edges, algoSteps, algoHints);
+            console.log('Kruskal algorithm completed', algoSteps, algoHints);
             break;
         default:
             console.error('Unknown algorithm:', algo);
