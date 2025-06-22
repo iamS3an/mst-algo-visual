@@ -89,7 +89,7 @@ export function manageScene(container) {
         }
     };
 
-    const uiController = {
+    const actionController = {
         clearScene: clearElements,
         genExample: () => {
             clearElements();
@@ -158,5 +158,5 @@ export function manageScene(container) {
         },
     };
 
-    return uiController;
+    return actionController;
 }
