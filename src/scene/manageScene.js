@@ -30,9 +30,9 @@ export function manageScene(container) {
     const handleResize = () => onWindowResize({ camera, renderer });
 
     const handlePointerEvents = {
-        pointerdown: (e) => onPointerDown(e, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback }),
-        pointermove: (e) => onPointerMove(e, { camera, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback }),
-        pointerup: () => onPointerUp({ controls, state }),
+        pointerdown: (e) => onPointerDown(e, { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges }),
+        pointermove: (e) => onPointerMove(e, { camera, pointer, raycaster, plane, offset, state, edges }),
+        pointerup: () => onPointerUp({ controls, state, nodes, edges, sliderCallback }),
     };
 
     const eventListeners = [

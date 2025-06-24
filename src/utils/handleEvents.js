@@ -17,38 +17,35 @@ export function onWindowResize({ camera, renderer }) {
 }
 
 export function onPointerDown(event, params) {
-    const { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback } = params;
+    const { scene, camera, controls, pointer, raycaster, plane, offset, state, nodes, edges } = params;
     if (state.lastStep > 0) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
+        state.clickedNode = intersects[0].object;
+        controls.enabled = false;
+        plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.clickedNode.position);
+        offset.copy(intersects[0].point).sub(state.clickedNode.position);
         if (state.modes.removeNode) {
-            deleteNode(scene, nodes, edges, intersects[0].object);
+            deleteNode(scene, nodes, edges, state.clickedNode);
         } else if (state.modes.addEdge) {
-            if (setSelected(intersects[0].object, state.selectedNodes) === 2) {
+            if (setSelected(state.clickedNode, state.selectedNodes) === 2) {
                 createEdge(scene, edges, state.selectedNodes);
                 resetSelected(state.selectedNodes);
             }
         } else if (state.modes.removeEdge) {
-            if (setSelected(intersects[0].object, state.selectedNodes) === 2) {
+            if (setSelected(state.clickedNode, state.selectedNodes) === 2) {
                 deleteEdge(scene, edges, state.selectedNodes);
                 resetSelected(state.selectedNodes);
             }
         } else if (state.modes.selectStart) {
-            chooseStart(nodes, intersects[0].object);
-        } else {
-            state.clickedNode = intersects[0].object;
-            controls.enabled = false;
-            plane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(plane.normal), state.clickedNode.position);
-            offset.copy(intersects[0].point).sub(state.clickedNode.position);
+            chooseStart(nodes, state.clickedNode);
         }
-        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
-        sliderCallback(state.lastStep, state.algoSteps.length);
     }
 }
 
 export function onPointerMove(event, params) {
-    const { camera, pointer, raycaster, plane, offset, state, nodes, edges, sliderCallback } = params;
+    const { camera, pointer, raycaster, plane, offset, state, edges } = params;
     if (!state.clickedNode || state.lastStep > 0) return;
     updateRaycasterFromEvent(raycaster, camera, pointer, event);
     const intersection = new THREE.Vector3();
@@ -61,12 +58,15 @@ export function onPointerMove(event, params) {
             }
         }
     }
-    runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
 }
 
 export function onPointerUp(params) {
-    const { controls, state } = params;
+    const { controls, state, nodes, edges, sliderCallback } = params;
     if (state.lastStep > 0) return;
-    state.clickedNode = null;
+    if (state.clickedNode) {
+        runAlgo(state.selectedAlgo, nodes, edges, state.algoSteps, state.algoHints);
+        sliderCallback(state.lastStep, state.algoSteps.length);
+        state.clickedNode = null;
+    }
     controls.enabled = true;
 }
