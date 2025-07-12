@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { manageScene } from './scene/manageScene';
+import manageScene from './scene/manageScene';
 import ControlButton from './components/ControlButton';
-import PlaybackControls from './components/PlaybackControls';
+import PlaybackControl from './components/PlaybackControl';
 import Sidebar from './components/Sidebar';
 import './styles/App.css';
 
@@ -94,9 +94,9 @@ function App() {
         <div className="application-container">
             <div ref={containerRef}></div>
             {!(isPlaying || sliderValue > 0) && buttonConfigs.map(({ id, text, action, hidden = false }) => <ControlButton key={id} id={id} text={text} onClick={action} hidden={hidden} />)}
-            {(activeAction) && <div className="action-hint-message">{hintMessages[activeAction]}</div>}
+            {activeAction && <div className="action-hint-message">{hintMessages[activeAction]}</div>}
             {sliderValue > 0 && <div className="algo-hint-message">{hintMessages[algoHint]}</div>}
-            <PlaybackControls isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
+            <PlaybackControl isPlaying={isPlaying} sliderValue={sliderValue} maxSliderValue={maxSliderValue} handlePlayPause={handlePlayPause} handleReset={handleReset} handleSliderChange={handleSlider} />
             {!(isPlaying || sliderValue > 0) && <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} handleAlgo={handleAlgo} />}
         </div>
     );

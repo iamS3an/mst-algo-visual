@@ -1,5 +1,5 @@
-import { createEdge } from '../scene/edges';
-import { createNode } from '../scene/nodes';
+import { createEdge } from './edgeUtils';
+import { createNode } from './nodeUtils';
 
 export function visualizeMST(targetStep, algoSteps) {
     algoSteps.forEach((obj) => {
@@ -12,9 +12,6 @@ export function visualizeMST(targetStep, algoSteps) {
             algoSteps[i].userData.originalColor = algoSteps[i].material.color.clone();
         }
         if (algoSteps[i].userData.weight) {
-            // if (i > 0 && algoSteps[i - 1].userData.weight) {
-            //     algoSteps[i - 1].material.color.copy(algoSteps[i - 1].userData.originalColor);
-            // }
             algoSteps[i].material.color.set('#FFFFFF');
         } else {
             algoSteps[i].material.color.set('#007BFF');

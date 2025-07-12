@@ -1,10 +1,10 @@
-import { initScene } from './initScene';
-import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/handleEvents';
-import { createExample, visualizeMST } from '../utils/utils';
-import { createNode } from './nodes';
-import { runAlgo } from '../utils/algo';
+import initScene from './initScene';
+import { onWindowResize, onPointerDown, onPointerMove, onPointerUp } from '../utils/eventHandler';
+import { createExample, visualizeMST } from '../utils/visualHelper';
+import { createNode } from '../utils/nodeUtils';
+import { runAlgo } from '../utils/algoEngine';
 
-export function manageScene(container) {
+function manageScene(container) {
     if (container) container.innerHTML = '';
 
     const { scene, camera, renderer, controls, pointer, raycaster, plane, offset, state } = initScene(container);
@@ -74,11 +74,9 @@ export function manageScene(container) {
         hintCallback(0, 0);
     };
 
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    const executeAlgo = async () => {
+    const executeAlgo = async (t = 1000) => {
         while (state.lastStep < state.algoSteps.length) {
-            await sleep(1500);
+            await new Promise((resolve) => setTimeout(resolve, t));
             if (!state.isPlaying) {
                 return;
             }
@@ -160,3 +158,5 @@ export function manageScene(container) {
 
     return actionController;
 }
+
+export default manageScene;

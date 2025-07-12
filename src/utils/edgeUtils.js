@@ -8,21 +8,7 @@ const isConnected = (nodeA, nodeB, edges) => {
     return foundEdge || null;
 };
 
-const createWeightTexture = (weight) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 64;
-    canvas.height = 64;
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = '#FFE153';
-    context.font = '60px Arial';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText(weight.toString(), 32, 32);
-    return new THREE.CanvasTexture(canvas);
-};
-
-export function defineEdge(nodeA, nodeB) {
+const defineEdge = (nodeA, nodeB) => {
     const weight = Math.round(nodeA.position.distanceTo(nodeB.position) / 5);
     const path = new THREE.CatmullRomCurve3([nodeA.position, nodeB.position]);
     const geometry = new THREE.TubeGeometry(path, 20, 0.4, 8, false);
@@ -33,7 +19,19 @@ export function defineEdge(nodeA, nodeB) {
     });
     const edge = new THREE.Mesh(geometry, material);
 
-    const weightTexture = createWeightTexture(weight);
+    const weightTexture = (() => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = '#FFE153';
+        context.font = '60px Arial';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(weight.toString(), 32, 32);
+        return new THREE.CanvasTexture(canvas);
+    })();
     const spriteMaterial = new THREE.SpriteMaterial({
         map: weightTexture,
         transparent: true,
@@ -46,7 +44,7 @@ export function defineEdge(nodeA, nodeB) {
     edge.userData = { nodeA, nodeB, weight };
 
     return edge;
-}
+};
 
 export function createEdge(scene, edges, selectedNodes) {
     const [node1, node2] = selectedNodes;
@@ -55,6 +53,17 @@ export function createEdge(scene, edges, selectedNodes) {
         scene.add(edge);
         scene.add(edge.sprite);
         edges.push(edge);
+    }
+}
+
+export function deleteEdge(scene, edges, selectedNodes) {
+    const [node1, node2] = selectedNodes;
+    const foundEdge = isConnected(node1, node2, edges);
+    if (foundEdge) {
+        scene.remove(foundEdge);
+        scene.remove(foundEdge.sprite);
+        const index = edges.indexOf(foundEdge);
+        if (index > -1) edges.splice(index, 1);
     }
 }
 
@@ -67,15 +76,4 @@ export function updateEdge(edge) {
     edge.sprite.material.map.dispose();
     edge.sprite.material.map = newEdge.sprite.material.map;
     edge.userData.weight = newEdge.userData.weight;
-}
-
-export function deleteEdge(scene, edges, selectedNodes) {
-    const [node1, node2] = selectedNodes;
-    const foundEdge = isConnected(node1, node2, edges);
-    if (foundEdge) {
-        scene.remove(foundEdge);
-        scene.remove(foundEdge.sprite);
-        const index = edges.indexOf(foundEdge);
-        if (index > -1) edges.splice(index, 1);
-    }
 }

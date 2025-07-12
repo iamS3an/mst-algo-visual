@@ -1,6 +1,6 @@
-import '../styles/PlaybackControls.css';
+import '../styles/PlaybackControl.css';
 
-const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPause, handleReset, handleSliderChange }) => {
+function PlaybackControl({ isPlaying, sliderValue, maxSliderValue, handlePlayPause, handleReset, handleSliderChange }) {
     return (
         <div className="controls-container">
             <button onClick={handlePlayPause} className="play-button" disabled={maxSliderValue === 0}>
@@ -29,4 +29,4 @@ const PlaybackControls = ({ isPlaying, sliderValue, maxSliderValue, handlePlayPa
     );
 };
 
-export default PlaybackControls;
+export default PlaybackControl;

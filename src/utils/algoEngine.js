@@ -19,8 +19,6 @@ const prim = (nodes, edges, algoSteps, algoHints) => {
             break;
         }
 
-        // algoSteps.push(...candidateEdges);
-
         const minEdge = candidateEdges.reduce((min, edge) => {
             const minWeight = min.userData.weight || 0;
             const edgeWeight = edge.userData.weight || 0;

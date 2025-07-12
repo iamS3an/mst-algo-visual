@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 
-export function initScene(container) {
+function initScene(container) {
     if (container) container.innerHTML = '';
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#242424');
@@ -34,11 +34,13 @@ export function initScene(container) {
         selectedAlgo: 'prim',
         algoHints: [],
         algoSteps: [],
-        clickedNode: null,
         isPlaying: false,
         lastStep: 0,
+        clickedNode: null,
         selectedNodes: [],
     };
 
     return { scene, camera, renderer, controls, pointer, raycaster, plane, offset, state };
 }
+
+export default initScene;

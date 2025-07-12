@@ -1,6 +1,6 @@
 import '../styles/Sidebar.css';
 
-export default function Sidebar({ isSidebarOpen, toggleSidebar, handleAlgo }) {
+function Sidebar({ isSidebarOpen, toggleSidebar, handleAlgo }) {
     return (
         <div className="sidebar-container">
             <button className="sidebar-toggle" onClick={toggleSidebar}>
@@ -17,3 +17,5 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar, handleAlgo }) {
         </div>
     );
 }
+
+export default Sidebar;
