@@ -27,6 +27,6 @@ function PlaybackControl({ isPlaying, sliderValue, maxSliderValue, handlePlayPau
             </div>
         </div>
     );
-};
+}
 
 export default PlaybackControl;

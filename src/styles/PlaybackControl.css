@@ -14,8 +14,8 @@
     height: 30px;
     border-radius: 50%;
     background-color: transparent;
-    color: #FFFFFF;
-    border: 2px solid #FFFFFF;
+    color: #ffffff;
+    border: 2px solid #ffffff;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -32,9 +32,9 @@
 }
 
 .slider-container {
-    display: flex; 
-    align-items: center; 
-    background-color: transparent; 
+    display: flex;
+    align-items: center;
+    background-color: transparent;
     padding: 5px 10px;
 }
 
@@ -53,7 +53,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #007BFF;
+    background: #007bff;
     cursor: pointer;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
     transition: all 0.2s ease;
@@ -63,7 +63,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #007BFF;
+    background: #007bff;
     cursor: pointer;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
     transition: all 0.2s ease;
@@ -79,7 +79,7 @@
 
 .time-display {
     font-size: 16px;
-    color: #FFFFFF;
+    color: #ffffff;
     background-color: transparent;
     padding: 2px 6px;
     border-radius: 3px;

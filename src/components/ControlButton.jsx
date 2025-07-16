@@ -6,6 +6,6 @@ function ControlButton({ id, text, onClick, hidden }) {
             {text}
         </button>
     );
-};
+}
 
 export default ControlButton;

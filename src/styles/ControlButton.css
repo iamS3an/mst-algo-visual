@@ -26,7 +26,7 @@
 .button-example {
     top: 80px;
     right: 20px;
-    background-color: #007BFF;
+    background-color: #007bff;
 }
 .button-example:hover:not(:disabled) {
     background-color: #0056b3;
@@ -35,34 +35,34 @@
 .button-clear {
     top: 20px;
     right: 20px;
-    background-color: #FFA000;
+    background-color: #ffa000;
 }
 .button-clear:hover:not(:disabled) {
-    background-color: #FF8000;
+    background-color: #ff8000;
 }
 
 .button-addNode {
     top: 20px;
     left: 20px;
-    background-color: #02C874;
+    background-color: #02c874;
 }
 .button-addNode:hover:not(:disabled) {
-    background-color: #02A05D;
+    background-color: #02a05d;
 }
 
 .button-removeNode {
     top: 20px;
     left: 150px;
-    background-color: #02C874;
+    background-color: #02c874;
 }
 .button-removeNode:hover:not(:disabled) {
-    background-color: #02A05D;
+    background-color: #02a05d;
 }
 
 .button-addEdge {
     top: 80px;
     left: 20px;
-    background-color: #3B3B3B;
+    background-color: #3b3b3b;
 }
 .button-addEdge:hover:not(:disabled) {
     background-color: #363636;
@@ -71,7 +71,7 @@
 .button-removeEdge {
     top: 80px;
     left: 150px;
-    background-color: #3B3B3B;
+    background-color: #3b3b3b;
 }
 .button-removeEdge:hover:not(:disabled) {
     background-color: #363636;
@@ -80,8 +80,8 @@
 .button-selectStart {
     top: 140px;
     left: 20px;
-    background-color: #FF0000;
+    background-color: #ff0000;
 }
 .button-selectStart:hover:not(:disabled) {
-    background-color: #CC0000;
+    background-color: #cc0000;
 }
