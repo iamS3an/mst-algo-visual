@@ -1,87 +1,119 @@
 # Minimum Spanning Tree Algorithm Visualization
 
-Visit the live demo at: [iamS3an.github.io/mst-algo-visual](https://iamS3an.github.io/mst-algo-visual)
+[Live Demo](https://iamS3an.github.io/mst-algo-visual)
 
 ## Overview
-This is a web-based interactive visualization tool for Minimum Spanning Tree (MST) algorithms. Through dynamic animations and user interactions, it helps users understand how prim's and kruskal algorithm finds the minimum spanning tree in graphs. The tool utilizes Three.js to provide 3D visualization effects, making algorithm learning more intuitive and engaging.
+
+This is an interactive, web-based visualization tool for Minimum Spanning Tree (MST) algorithms, specifically **Prim's** and **Kruskal's** algorithms. It leverages Three.js for immersive 3D graph rendering, React for modular UI, and a stepwise animation engine to help learners explore and understand MST construction visually and interactively.
+
+Key educational features:
+- **Customizable 3D graphs** – users can freely add/remove nodes/edges, edit graph layouts, and adjust edge weights in real time.
+- **Step-by-step algorithm animation** – clear color-coded highlights, playback controls, and explanatory hints guide learners through the MST building process.
+- **Beginner-friendly UI** – simple controls, clear tooltips, and a focus on usability over complexity.
 
 ## Features
-**1. Interactive Graph Editing**
-- Add/Delete nodes
-- Create/Remove edges
-- Select starting points for prim's algorithm
-- Auto-generate example graphs
-- Switch to experience another algorithm
 
-**2. Algorithm Visualization**  
-- Step-by-step demonstration of Prim's algorithm execution
-- Color-coded highlighting of visited nodes and selected edges
-- Adjustable playback speed and manual slider controls
-- Dynamic hint for the algorithm proceeding stage
+### 1. Interactive Graph Editing
+- **Add/Delete Nodes**: Place or remove nodes in the 3D scene.
+- **Create/Remove Edges**: Connect/disconnect nodes; edge weights auto-update based on 3D positions.
+- **Drag and Move Nodes**: Rearrange nodes freely; edge weights adjust in real time.
+- **Select Start Node (Prim's)**: Choose the root node interactively when using Prim's algorithm.
+- **Auto-generate Example Graphs**: Instantly create a sample graph for demo or testing.
+- **Clear Workspace**: Remove all elements to start fresh.
+- **Switch Algorithms**: Easily toggle between Prim's and Kruskal's via the sidebar.
 
-**3. Fully Web-Based**
-- No installation required, runs directly in the browser
-- Light-weighted design, available for different access methods
-- 3D interactive interface allowing freely exploration
+### 2. Algorithm Visualization & Playback
+- **Stepwise Animation**: Play, pause, reset, and manually scrub through each algorithm step.
+- **Color-coded Feedback**: MST nodes and edges are clearly distinguished at each step.
+- **Synchronized Hints**: Contextual instructions explain every stage of the algorithm.
+- **Responsive Design**: The 3D scene can be explored from any angle via mouse/touch controls.
+
+### 3. Technology Stack
+- **React**: UI logic and state management.
+- **Three.js**: 3D rendering and interactive graph manipulation.
+- **Vite**: Fast development server and build tool.
+- **Pure Front-end**: No backend or server required—deploy anywhere.
 
 ## Usage Guide
 
 ### Basic Operations
-- **Add Node**: Click the "Add Node" button, then click anywhere on the screen
-- **Delete Node**: Click the "Remove Node" button, then select the node to delete
-- **Connect Edges**: Click the "Add Edge" button, then select two nodes to connect
-- **Remove Edges**: Click the "Remove Edge" button, then select two connected nodes
-- **Select Start Point**: Click the "Select Start Point" button, then choose a node as the algorithm's starting point
-- **Load Example**: Click the "Example" button to automatically generate a sample graph
-- **Clear Screen**: Click the "Clear" button to remove all nodes and edges
-- **Switch Algorithm**: Click the sidebar on the bottom-left corner and choose the algorithm to display the result
+- **Add Node**: Click “Add Node”, then click anywhere in the scene.
+- **Remove Node**: Click “Remove Node”, then select a node to delete.
+- **Add Edge**: Click “Add Edge”, then select two nodes to connect.
+- **Remove Edge**: Click “Remove Edge”, then select two nodes to disconnect.
+- **Select Start Node** (Prim’s only): Click “Select Start Point”, then choose a node.
+- **Load Example**: Click “Example” to generate a demo graph.
+- **Clear All**: Click “Clear All” to remove everything.
+- **Switch Algorithm**: Use the sidebar at the lower left to toggle Prim/Kruskal.
 
 ### Algorithm Controls
-- **Play/Pause**: Use the play/pause button in the bottom control panel to control algorithm execution
-- **Reset**: Click the reset button to return to the initial algorithm state
-- **Step Control**: Use the slider to manually control the algorithm's progress
+- **Play/Pause**: Use the bottom control panel to start or pause the animation.
+- **Reset**: Rewind the animation to the beginning.
+- **Step Slider**: Scrub through steps manually; each step is explained via a hint message.
 
-## Technical Implementation
+## Project Structure
 
-### Core Technologies
-- **React**: Building the user interface and handle the communication of the components
-- **Three.js**: Providing 3D rendering and interaction capabilities
-- **JavaScript**: Implementing algorithm logic and event handling
-
-### Project Structure
-```
+```plaintext
 src/
-├── components/        # React components
-│   ├── Interface.jsx
+├── components/      # React UI components
 │   ├── ControlButton.jsx
-│   ├── PlaybackControls.jsx
+│   ├── PlaybackControl.jsx
 │   └── Sidebar.jsx
-├── scene/             # Three.js scene related
+├── scene/           # Three.js scene and management
 │   ├── manageScene.js
-│   ├── initScene.js
-│   ├── nodes.js
-│   └── edges.js
-├── utils/             # Utility functions
-│   ├── algo.js
-│   ├── handleEvents.js
-│   └── utils.js
-└── styles/            # CSS styles
+│   └── initScene.js
+├── utils/           # Algorithm and helper logic
+│   ├── algoEngine.js
+│   ├── edgeUtils.js
+│   ├── eventHandler.js
+│   ├── nodeUtils.js
+│   └── visualHelper.js
+├── styles/          # CSS modules
+├── App.jsx          # Application container
+├── main.jsx         # App entry point
+└── index.html       # SPA entry
 ```
 
 ## Algorithm Details
-This project implements two common minimum spanning tree algorithms: **Prim's Algorithm** and **Kruskal's Algorithm**. Use the sidebar on the bottom-left corner in order to toggle between them.
+
+This tool visualizes two classic MST algorithms:
 
 ### Prim's Algorithm
-1. Choose a starting node and add it to the visited set.  
-2. Find all edges connecting visited and unvisited nodes.  
-3. Select the edge with the minimum weight, add it to the tree, and mark the new node as visited.  
-4. Repeat steps 2–3 until all nodes are visited or no edges remain.
+- Starts from a user-selected node.
+- At each step, selects the smallest-weight edge connecting the growing tree to a new node.
+- Repeats until all nodes are included.
 
 ### Kruskal's Algorithm
-1. Sort all edges by weight in non-decreasing order.  
-2. Iterate through the sorted edges and add each edge to the tree if it does not form a cycle (using a Union-Find data structure).  
-3. Repeat step 2 until the tree has (number of nodes – 1) edges or no edges remain.  
+- Sorts all edges by increasing weight.
+- Iteratively adds the next smallest edge that does **not** create a cycle (using Union-Find).
+- Stops when all nodes are connected.
+
+Visualizations include clear step highlights and contextual explanations, making it suitable for self-guided learning or classroom demonstrations.
+
+## Development & Deployment
+
+**Requirements**: Node.js >= v18
+
+**Setup**:
+```bash
+npm install
+npm run dev
+```
+Open [http://localhost:5173/](http://localhost:5173/) to view.
+
+**Production Build**:
+```bash
+npm run build
+```
+
+**Deploy to GitHub Pages**:
+```bash
+npm run deploy
+```
+(Both homepage and Vite base URL are preconfigured.)
+
 
 ## Contact
-Feel free to contact me at:
-Huan-Cheng Lin - seanlin12345@gmail.com
+
+**Huan-Cheng Lin**  
+Email: seanlin12345@gmail.com
